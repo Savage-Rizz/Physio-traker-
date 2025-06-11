@@ -25,35 +25,38 @@
         
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f0f7ff;
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
             color: #333;
             line-height: 1.6;
             padding: 20px;
+            min-height: 100vh;
         }
         
         .container {
             max-width: 1200px;
             margin: 0 auto;
             background-color: white;
-            border-radius: 12px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            border-radius: 15px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
             overflow: hidden;
         }
         
         header {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            background: linear-gradient(135deg, var(--primary), #1a5276);
             color: white;
-            padding: 20px;
+            padding: 25px 20px;
             text-align: center;
+            position: relative;
         }
         
         h1 {
             font-size: 2.5rem;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 15px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
         
         h1 i {
@@ -65,7 +68,7 @@
             justify-content: center;
             align-items: center;
             gap: 15px;
-            margin-top: 15px;
+            margin-top: 20px;
             flex-wrap: wrap;
         }
         
@@ -73,105 +76,107 @@
             display: flex;
             gap: 10px;
             align-items: center;
-            background: rgba(255, 255, 255, 0.2);
-            padding: 10px 15px;
+            background: rgba(255, 255, 255, 0.25);
+            padding: 12px 20px;
             border-radius: 50px;
+            backdrop-filter: blur(5px);
         }
         
         .date-btn {
             background: none;
             border: none;
             color: white;
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             cursor: pointer;
             padding: 5px;
             border-radius: 50%;
-            width: 36px;
-            height: 36px;
+            width: 40px;
+            height: 40px;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: background 0.3s;
+            transition: all 0.3s;
         }
         
         .date-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.35);
+            transform: scale(1.1);
         }
         
         #currentDate {
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             font-weight: 600;
-            min-width: 150px;
+            min-width: 200px;
             text-align: center;
+            letter-spacing: 0.5px;
         }
         
         .content {
-            padding: 25px;
+            padding: 30px;
         }
         
         .add-department {
             background-color: white;
             padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-            margin-bottom: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            margin-bottom: 30px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 15px;
+            gap: 20px;
+            border: 1px solid #e0e7ff;
         }
         
         .action-btn {
-            background-color: var(--primary);
+            background: linear-gradient(to right, var(--primary), #2980b9);
             color: white;
             border: none;
-            padding: 12px 25px;
+            padding: 14px 28px;
             border-radius: 50px;
             cursor: pointer;
             font-weight: 600;
-            font-size: 1rem;
+            font-size: 1.1rem;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             transition: all 0.3s;
-            box-shadow: 0 4px 6px rgba(52, 152, 219, 0.3);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
         }
         
         .action-btn:hover {
-            background-color: #2980b9;
-            transform: translateY(-2px);
+            transform: translateY(-3px);
+            box-shadow: 0 7px 20px rgba(52, 152, 219, 0.4);
         }
         
         .action-btn i {
-            font-size: 1.1rem;
+            font-size: 1.2rem;
         }
         
         .history-btn {
-            background-color: var(--secondary);
-        }
-        
-        .history-btn:hover {
-            background-color: #1a252f;
+            background: linear-gradient(to right, var(--secondary), #1a252f);
         }
         
         .department {
             background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
-            margin-bottom: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            margin-bottom: 30px;
             overflow: hidden;
             transition: transform 0.3s;
+            border: 1px solid #e0e7ff;
         }
         
         .department:hover {
-            transform: translateY(-3px);
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
         }
         
         .department-header {
             background: linear-gradient(135deg, var(--primary), #4aa1d8);
             color: white;
-            padding: 15px 20px;
+            padding: 18px 25px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -181,46 +186,48 @@
         
         .department-name {
             font-weight: bold;
-            font-size: 1.3rem;
+            font-size: 1.4rem;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
         }
         
         .department-actions {
             display: flex;
-            gap: 8px;
+            gap: 10px;
         }
         
         .dept-btn {
             background-color: rgba(255, 255, 255, 0.2);
             color: white;
             border: none;
-            padding: 8px 15px;
+            padding: 10px 18px;
             border-radius: 50px;
             cursor: pointer;
             font-weight: 500;
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 8px;
             transition: all 0.3s;
+            font-size: 1rem;
         }
         
         .dept-btn:hover {
             background-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
         }
         
         .beds-container {
             display: flex;
             flex-wrap: wrap;
-            padding: 20px;
-            gap: 15px;
+            padding: 25px;
+            gap: 20px;
         }
         
         .bed {
-            width: 70px;
-            height: 70px;
-            border-radius: 10px;
+            width: 80px;
+            height: 80px;
+            border-radius: 12px;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -228,62 +235,69 @@
             cursor: pointer;
             transition: all 0.3s;
             position: relative;
-            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
         
         .bed-number {
             font-weight: bold;
-            font-size: 1.4rem;
+            font-size: 1.6rem;
         }
         
         .bed-status {
-            font-size: 0.85rem;
-            margin-top: 3px;
+            font-size: 0.9rem;
+            margin-top: 5px;
             font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         
         .bed-pending {
-            background-color: var(--warning);
+            background: linear-gradient(135deg, var(--warning), #e67e22);
             color: white;
         }
         
         .bed-completed {
-            background-color: var(--success);
+            background: linear-gradient(135deg, var(--success), #27ae60);
             color: white;
         }
         
         .bed-not-done {
-            background-color: var(--danger);
+            background: linear-gradient(135deg, var(--danger), #c0392b);
             color: white;
         }
         
         .bed:hover {
-            transform: scale(1.08);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+            transform: scale(1.1);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
         }
         
         .note-indicator {
             position: absolute;
-            bottom: 5px;
-            right: 5px;
+            bottom: 8px;
+            right: 8px;
             background-color: rgba(0, 0, 0, 0.7);
             color: white;
-            width: 22px;
-            height: 22px;
+            width: 24px;
+            height: 24px;
             border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 0.75rem;
+            font-size: 0.8rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
         
         .add-bed {
-            background-color: var(--gray);
+            background: linear-gradient(135deg, var(--gray), #7f8c8d);
             color: white;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.8rem;
+            font-size: 2rem;
+        }
+        
+        .add-bed:hover {
+            background: linear-gradient(135deg, #7f8c8d, var(--gray));
         }
         
         .modal {
@@ -297,217 +311,273 @@
             z-index: 1000;
             justify-content: center;
             align-items: center;
+            backdrop-filter: blur(5px);
         }
         
         .modal-content {
             background-color: white;
-            padding: 30px;
-            border-radius: 12px;
-            width: 450px;
+            padding: 35px;
+            border-radius: 15px;
+            width: 500px;
             max-width: 90%;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+            animation: modalAppear 0.4s ease-out;
+        }
+        
+        @keyframes modalAppear {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
         
         .modal-header {
             font-weight: bold;
-            font-size: 1.4rem;
-            margin-bottom: 20px;
+            font-size: 1.6rem;
+            margin-bottom: 25px;
             color: var(--secondary);
             display: flex;
             justify-content: space-between;
             align-items: center;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f7ff;
         }
         
         .close-modal {
             background: none;
             border: none;
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             cursor: pointer;
             color: var(--gray);
+            transition: all 0.3s;
+        }
+        
+        .close-modal:hover {
+            color: var(--danger);
+            transform: scale(1.1);
         }
         
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
         
         .form-group label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             font-weight: 600;
             color: var(--dark);
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
         
         .form-group input, .form-group textarea, .form-group select {
             width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 1rem;
-            transition: border-color 0.3s;
+            padding: 14px;
+            border: 2px solid #e0e7ff;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            background: #f8fbff;
         }
         
         .form-group input:focus, .form-group textarea:focus {
             border-color: var(--primary);
             outline: none;
-            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+            box-shadow: 0 0 0 4px rgba(52, 152, 219, 0.2);
+            background: white;
         }
         
         .form-group textarea {
-            height: 120px;
+            height: 140px;
             resize: vertical;
         }
         
         .status-options {
             display: flex;
             gap: 15px;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
         
         .status-option {
-            padding: 12px 20px;
-            border-radius: 8px;
+            padding: 15px 25px;
+            border-radius: 10px;
             cursor: pointer;
             border: 2px solid transparent;
             flex: 1;
             text-align: center;
             font-weight: 600;
             transition: all 0.3s;
+            font-size: 1.1rem;
         }
         
         .status-option.selected {
             border-color: var(--secondary);
             transform: translateY(-3px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
         }
         
         .status-option.completed {
-            background-color: var(--success);
+            background: linear-gradient(to right, var(--success), #27ae60);
             color: white;
         }
         
         .status-option.not-done {
-            background-color: var(--danger);
+            background: linear-gradient(to right, var(--danger), #c0392b);
             color: white;
         }
         
         .modal-actions {
             display: flex;
             justify-content: flex-end;
-            gap: 12px;
-            margin-top: 25px;
+            gap: 15px;
+            margin-top: 30px;
         }
         
         .modal-btn {
-            padding: 12px 25px;
-            border-radius: 8px;
+            padding: 14px 28px;
+            border-radius: 10px;
             cursor: pointer;
             border: none;
             font-weight: 600;
-            font-size: 1rem;
+            font-size: 1.1rem;
             transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
         
         .save-btn {
-            background-color: var(--primary);
+            background: linear-gradient(to right, var(--primary), #2980b9);
             color: white;
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
         }
         
         .save-btn:hover {
-            background-color: #2980b9;
+            transform: translateY(-3px);
+            box-shadow: 0 7px 20px rgba(52, 152, 219, 0.4);
         }
         
         .cancel-btn {
-            background-color: var(--gray);
+            background: linear-gradient(to right, var(--gray), #7f8c8d);
             color: white;
+            box-shadow: 0 5px 15px rgba(149, 165, 166, 0.3);
         }
         
         .cancel-btn:hover {
-            background-color: #7f8c8d;
+            transform: translateY(-3px);
+            box-shadow: 0 7px 20px rgba(149, 165, 166, 0.4);
         }
         
         .history-modal .modal-content {
-            width: 800px;
+            width: 850px;
             max-width: 95%;
         }
         
         .history-list {
             max-height: 500px;
             overflow-y: auto;
-            border: 1px solid #eee;
-            border-radius: 8px;
-            padding: 10px;
+            border: 2px solid #f0f7ff;
+            border-radius: 12px;
+            padding: 15px;
+            background: #f8fbff;
         }
         
         .history-item {
-            padding: 15px;
-            border-bottom: 1px solid #eee;
+            padding: 20px;
+            border-bottom: 2px solid #e0e7ff;
+            background: white;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
         }
         
         .history-item:last-child {
             border-bottom: none;
+            margin-bottom: 0;
         }
         
         .history-date {
             font-weight: bold;
             color: var(--secondary);
-            margin-bottom: 5px;
+            margin-bottom: 10px;
             display: flex;
             justify-content: space-between;
+            font-size: 1.2rem;
+            padding-bottom: 10px;
+            border-bottom: 2px dashed #e0e7ff;
         }
         
         .history-department {
             font-weight: 600;
-            margin: 10px 0 5px 15px;
+            margin: 15px 0 10px 0;
             color: var(--primary);
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-left: 10px;
+            border-left: 4px solid var(--primary);
         }
         
         .history-bed {
             display: flex;
             align-items: center;
-            gap: 10px;
-            margin-left: 30px;
-            margin-bottom: 8px;
+            gap: 15px;
+            margin-bottom: 12px;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 8px;
         }
         
         .history-bed-status {
             display: inline-block;
-            width: 12px;
-            height: 12px;
+            width: 15px;
+            height: 15px;
             border-radius: 50%;
         }
         
         .history-bed-completed {
-            background-color: var(--success);
+            background: linear-gradient(to right, var(--success), #27ae60);
         }
         
         .history-bed-not-done {
-            background-color: var(--danger);
+            background: linear-gradient(to right, var(--danger), #c0392b);
         }
         
         .history-bed-pending {
-            background-color: var(--warning);
+            background: linear-gradient(to right, var(--warning), #e67e22);
         }
         
         .history-notes {
             margin-left: 30px;
-            padding: 8px;
-            background-color: #f8f9fa;
-            border-radius: 6px;
-            font-size: 0.9rem;
+            padding: 15px;
+            background-color: #f0f7ff;
+            border-radius: 8px;
+            font-size: 1rem;
+            border-left: 3px solid var(--primary);
         }
         
         .no-history {
             text-align: center;
-            padding: 20px;
+            padding: 30px;
             color: var(--gray);
             font-style: italic;
+            font-size: 1.2rem;
         }
         
         .today-highlight {
-            background: rgba(255, 255, 255, 0.2);
-            padding: 5px 15px;
+            background: linear-gradient(to right, var(--success), #27ae60);
+            padding: 6px 18px;
             border-radius: 50px;
             font-weight: 600;
+            color: white;
+            font-size: 0.9rem;
         }
         
         @media (max-width: 768px) {
@@ -528,15 +598,80 @@
             h1 {
                 font-size: 2rem;
             }
+            
+            .action-btn {
+                padding: 12px 20px;
+                font-size: 1rem;
+            }
+            
+            .beds-container {
+                padding: 15px;
+                gap: 15px;
+            }
+            
+            .bed {
+                width: 70px;
+                height: 70px;
+            }
+        }
+        
+        .status-counts {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .status-count {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: 500;
+        }
+        
+        .count-circle {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+        }
+        
+        .pending-count {
+            background-color: var(--warning);
+        }
+        
+        .completed-count {
+            background-color: var(--success);
+        }
+        
+        .not-done-count {
+            background-color: var(--danger);
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: var(--secondary);
+            font-weight: 500;
+            background: #f8fbff;
+            border-top: 1px solid #e0e7ff;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1><i class="fas fa-hospital-user"></i> Physiotherapy Patient Tracking</h1>
+            <h1><i class="fas fa-hospital-user"></i> Physiotherapy Patient Tracker</h1>
             <div class="date-controls">
-                <button class="action-btn" id="prevDateBtn"><i class="fas fa-chevron-left"></i></button>
+                <button class="action-btn" id="prevDateBtn"><i class="fas fa-chevron-left"></i> Previous</button>
                 
                 <div class="date-picker">
                     <button class="date-btn" id="prevDayBtn"><i class="fas fa-chevron-left"></i></button>
@@ -548,7 +683,22 @@
                     <i class="fas fa-calendar-day"></i> Today
                 </button>
                 
-                <button class="action-btn" id="nextDateBtn"><i class="fas fa-chevron-right"></i></button>
+                <button class="action-btn" id="nextDateBtn">Next <i class="fas fa-chevron-right"></i></button>
+            </div>
+            
+            <div class="status-counts">
+                <div class="status-count">
+                    <div class="count-circle pending-count">5</div>
+                    <span>Pending</span>
+                </div>
+                <div class="status-count">
+                    <div class="count-circle completed-count">12</div>
+                    <span>Completed</span>
+                </div>
+                <div class="status-count">
+                    <div class="count-circle not-done-count">2</div>
+                    <span>Not Done</span>
+                </div>
             </div>
         </header>
         
@@ -565,70 +715,12 @@
             
             <div id="departmentsContainer">
                 <!-- Departments will be added here dynamically -->
-                <div class="department">
-                    <div class="department-header">
-                        <div class="department-name">
-                            <i class="fas fa-male"></i> Male Medicine 1
-                        </div>
-                        <div class="department-actions">
-                            <button class="dept-btn"><i class="fas fa-edit"></i> Edit</button>
-                            <button class="dept-btn"><i class="fas fa-trash"></i> Delete</button>
-                        </div>
-                    </div>
-                    <div class="beds-container">
-                        <div class="bed bed-completed">
-                            <div class="bed-number">1</div>
-                            <div class="bed-status">Done</div>
-                            <div class="note-indicator">N</div>
-                        </div>
-                        <div class="bed bed-pending">
-                            <div class="bed-number">2</div>
-                            <div class="bed-status">Pending</div>
-                        </div>
-                        <div class="bed bed-not-done">
-                            <div class="bed-number">3</div>
-                            <div class="bed-status">Not Done</div>
-                        </div>
-                        <div class="bed add-bed">
-                            <div class="bed-number">+</div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="department">
-                    <div class="department-header">
-                        <div class="department-name">
-                            <i class="fas fa-female"></i> Female Surgery
-                        </div>
-                        <div class="department-actions">
-                            <button class="dept-btn"><i class="fas fa-edit"></i> Edit</button>
-                            <button class="dept-btn"><i class="fas fa-trash"></i> Delete</button>
-                        </div>
-                    </div>
-                    <div class="beds-container">
-                        <div class="bed bed-completed">
-                            <div class="bed-number">1</div>
-                            <div class="bed-status">Done</div>
-                        </div>
-                        <div class="bed bed-completed">
-                            <div class="bed-number">2</div>
-                            <div class="bed-status">Done</div>
-                        </div>
-                        <div class="bed bed-pending">
-                            <div class="bed-number">3</div>
-                            <div class="bed-status">Pending</div>
-                        </div>
-                        <div class="bed bed-pending">
-                            <div class="bed-number">4</div>
-                            <div class="bed-status">Pending</div>
-                        </div>
-                        <div class="bed add-bed">
-                            <div class="bed-number">+</div>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
+        
+        <footer>
+            <p>© 2023 Physiotherapy Patient Tracker | Real-time Patient Management System</p>
+        </footer>
     </div>
     
     <!-- Modal for bed status/notes -->
@@ -650,8 +742,12 @@
             </div>
             
             <div class="modal-actions">
-                <button class="modal-btn cancel-btn" id="cancelBedBtn">Cancel</button>
-                <button class="modal-btn save-btn" id="saveBedBtn">Save</button>
+                <button class="modal-btn cancel-btn" id="cancelBedBtn">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+                <button class="modal-btn save-btn" id="saveBedBtn">
+                    <i class="fas fa-save"></i> Save
+                </button>
             </div>
         </div>
     </div>
@@ -675,8 +771,12 @@
             </div>
             
             <div class="modal-actions">
-                <button class="modal-btn cancel-btn" id="cancelDepartmentBtn">Cancel</button>
-                <button class="modal-btn save-btn" id="saveDepartmentBtn">Save</button>
+                <button class="modal-btn cancel-btn" id="cancelDepartmentBtn">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+                <button class="modal-btn save-btn" id="saveDepartmentBtn">
+                    <i class="fas fa-save"></i> Save Department
+                </button>
             </div>
         </div>
     </div>
@@ -685,84 +785,96 @@
     <div class="modal history-modal" id="historyModal">
         <div class="modal-content">
             <div class="modal-header">
-                <span>Treatment History</span>
+                <span><i class="fas fa-history"></i> Treatment History</span>
                 <button class="close-modal">&times;</button>
             </div>
             
             <div class="history-list" id="historyList">
-                <div class="history-item">
-                    <div class="history-date">May 20, 2024 <span class="today-highlight">Today</span></div>
-                    
-                    <div class="history-department">
-                        <i class="fas fa-male"></i> Male Medicine 1
-                    </div>
-                    <div class="history-bed">
-                        <span class="history-bed-status history-bed-completed"></span>
-                        Bed 1: ROM exercises, gait training
-                    </div>
-                    <div class="history-bed">
-                        <span class="history-bed-status history-bed-pending"></span>
-                        Bed 2: Not treated yet
-                    </div>
-                    
-                    <div class="history-department">
-                        <i class="fas fa-female"></i> Female Surgery
-                    </div>
-                    <div class="history-bed">
-                        <span class="history-bed-status history-bed-completed"></span>
-                        Bed 1: Post-op mobility
-                    </div>
-                    <div class="history-notes">
-                        Patient showed good progress in walking with support
-                    </div>
-                </div>
-                
-                <div class="history-item">
-                    <div class="history-date">May 19, 2024</div>
-                    
-                    <div class="history-department">
-                        <i class="fas fa-male"></i> Male Medicine 1
-                    </div>
-                    <div class="history-bed">
-                        <span class="history-bed-status history-bed-completed"></span>
-                        Bed 1: Breathing exercises
-                    </div>
-                    <div class="history-notes">
-                        Patient reported reduced pain after treatment
-                    </div>
-                    
-                    <div class="history-department">
-                        <i class="fas fa-female"></i> Female Surgery
-                    </div>
-                    <div class="history-bed">
-                        <span class="history-bed-status history-bed-completed"></span>
-                        Bed 2: Shoulder ROM exercises
-                    </div>
-                </div>
-                
-                <div class="history-item">
-                    <div class="history-date">May 18, 2024</div>
-                    
-                    <div class="history-department">
-                        <i class="fas fa-female"></i> Female Surgery
-                    </div>
-                    <div class="history-bed">
-                        <span class="history-bed-status history-bed-completed"></span>
-                        Bed 3: Mobility exercises
-                    </div>
-                    <div class="history-notes">
-                        Patient able to walk 20m with minimal assistance
-                    </div>
-                </div>
+                <!-- History content will be added dynamically -->
             </div>
             
             <div class="modal-actions">
-                <button class="modal-btn cancel-btn" id="closeHistoryBtn">Close</button>
+                <button class="modal-btn cancel-btn" id="closeHistoryBtn">
+                    <i class="fas fa-times"></i> Close
+                </button>
             </div>
         </div>
     </div>
-    
+
     <script>
+        // Sample data structure for the application
+        const departmentsData = [
+            {
+                id: 1,
+                name: "Male Medicine 1",
+                beds: [
+                    { number: 1, status: "completed", notes: "ROM exercises, gait training" },
+                    { number: 2, status: "pending", notes: "" },
+                    { number: 3, status: "completed", notes: "Strength training" },
+                    { number: 4, status: "not-done", notes: "Patient refused treatment" },
+                    { number: 5, status: "pending", notes: "" }
+                ]
+            },
+            {
+                id: 2,
+                name: "Female Surgery",
+                beds: [
+                    { number: 1, status: "completed", notes: "Post-op mobility, breathing exercises" },
+                    { number: 2, status: "completed", notes: "Shoulder ROM, pain management" },
+                    { number: 3, status: "pending", notes: "" },
+                    { number: 4, status: "pending", notes: "" }
+                ]
+            },
+            {
+                id: 3,
+                name: "Pediatrics Ward",
+                beds: [
+                    { number: 1, status: "completed", notes: "Play therapy, motor skills" },
+                    { number: 2, status: "not-done", notes: "Patient discharged early" },
+                    { number: 3, status: "completed", notes: "Balance exercises" }
+                ]
+            }
+        ];
+        
+        // History data
+        const historyData = [
+            {
+                date: "May 19, 2024",
+                departments: [
+                    {
+                        name: "Male Medicine 1",
+                        beds: [
+                            { number: 1, status: "completed", notes: "ROM exercises" },
+                            { number: 2, status: "pending", notes: "" }
+                        ]
+                    },
+                    {
+                        name: "Female Surgery",
+                        beds: [
+                            { number: 1, status: "completed", notes: "Post-op mobility" },
+                            { number: 2, status: "completed", notes: "Pain management" }
+                        ]
+                    }
+                ]
+            },
+            {
+                date: "May 18, 2024",
+                departments: [
+                    {
+                        name: "Male Medicine 1",
+                        beds: [
+                            { number: 1, status: "completed", notes: "Initial assessment" },
+                            { number: 2, status: "not-done", notes: "Patient unavailable" }
+                        ]
+                    }
+                ]
+            }
+        ];
+        
+        // DOM elements
+        const departmentsContainer = document.getElementById('departmentsContainer');
+        const historyList = document.getElementById('historyList');
+        
         // Date handling
         let currentDate = new Date();
         
@@ -770,14 +882,6 @@
         function formatDate(date) {
             const options = { year: 'numeric', month: 'long', day: 'numeric' };
             return date.toLocaleDateString('en-US', options);
-        }
-        
-        // Format date as YYYY-MM-DD for Firebase
-        function formatDateForFirebase(date) {
-            const year = date.getFullYear();
-            const month = String(date.getMonth() + 1).padStart(2, '0');
-            const day = String(date.getDate()).padStart(2, '0');
-            return `${year}-${month}-${day}`;
         }
         
         // Update the displayed date
@@ -806,49 +910,249 @@
             loadDataForDate();
         });
         
+        // Previous date button
+        document.getElementById('prevDateBtn').addEventListener('click', () => {
+            currentDate.setDate(currentDate.getDate() - 1);
+            updateDateDisplay();
+            loadDataForDate();
+        });
+        
+        // Next date button
+        document.getElementById('nextDateBtn').addEventListener('click', () => {
+            currentDate.setDate(currentDate.getDate() + 1);
+            updateDateDisplay();
+            loadDataForDate();
+        });
+        
         // Simulate loading data for selected date
         function loadDataForDate() {
-            console.log("Loading data for", formatDateForFirebase(currentDate));
-            // In a real app, this would load from Firebase
+            renderDepartments();
         }
         
-        // Modal handling
-        const modals = document.querySelectorAll('.modal');
-        const closeButtons = document.querySelectorAll('.close-modal');
-        
-        // Open modal function
-        function openModal(modalId) {
-            document.getElementById(modalId).style.display = 'flex';
+        // Render departments and beds
+        function renderDepartments() {
+            departmentsContainer.innerHTML = '';
+            
+            departmentsData.forEach(dept => {
+                const departmentEl = document.createElement('div');
+                departmentEl.className = 'department';
+                
+                // Department header
+                const headerEl = document.createElement('div');
+                headerEl.className = 'department-header';
+                
+                // Choose icon based on department name
+                let iconClass = 'fas fa-clinic-medical';
+                if (dept.name.includes('Male')) iconClass = 'fas fa-male';
+                if (dept.name.includes('Female')) iconClass = 'fas fa-female';
+                if (dept.name.includes('Pediatrics')) iconClass = 'fas fa-child';
+                
+                headerEl.innerHTML = `
+                    <div class="department-name">
+                        <i class="${iconClass}"></i> ${dept.name}
+                    </div>
+                    <div class="department-actions">
+                        <button class="dept-btn edit-dept" data-id="${dept.id}">
+                            <i class="fas fa-edit"></i> Edit
+                        </button>
+                        <button class="dept-btn delete-dept" data-id="${dept.id}">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                    </div>
+                `;
+                
+                // Beds container
+                const bedsContainer = document.createElement('div');
+                bedsContainer.className = 'beds-container';
+                
+                // Add each bed
+                dept.beds.forEach(bed => {
+                    const bedEl = document.createElement('div');
+                    bedEl.className = `bed bed-${bed.status}`;
+                    
+                    // Add note indicator if note exists
+                    const noteIndicator = bed.notes ? '<div class="note-indicator">N</div>' : '';
+                    
+                    bedEl.innerHTML = `
+                        <div class="bed-number">${bed.number}</div>
+                        <div class="bed-status">${formatStatus(bed.status)}</div>
+                        ${noteIndicator}
+                    `;
+                    
+                    bedEl.addEventListener('click', () => {
+                        openBedModal(dept, bed);
+                    });
+                    
+                    bedsContainer.appendChild(bedEl);
+                });
+                
+                // Add "Add Bed" button
+                const addBedBtn = document.createElement('div');
+                addBedBtn.className = 'bed add-bed';
+                addBedBtn.innerHTML = '<div class="bed-number">+</div>';
+                addBedBtn.addEventListener('click', () => {
+                    addNewBed(dept);
+                });
+                
+                bedsContainer.appendChild(addBedBtn);
+                departmentEl.appendChild(headerEl);
+                departmentEl.appendChild(bedsContainer);
+                departmentsContainer.appendChild(departmentEl);
+            });
         }
         
-        // Close modal function
+        // Format status for display
+        function formatStatus(status) {
+            const statusMap = {
+                'pending': 'Pending',
+                'completed': 'Done',
+                'not-done': 'Not Done'
+            };
+            return statusMap[status] || status;
+        }
+        
+        // Add a new bed to a department
+        function addNewBed(dept) {
+            const newBedNumber = dept.beds.length > 0 ? Math.max(...dept.beds.map(b => b.number)) + 1 : 1;
+            alert(`Added new bed #${newBedNumber} to ${dept.name}`);
+        }
+        
+        // Open bed modal with current data
+        function openBedModal(dept, bed) {
+            document.getElementById('modalHeader').textContent = `Bed #${bed.number} - ${dept.name}`;
+            document.getElementById('bedNotes').value = bed.notes || '';
+            
+            // Set selected status
+            document.querySelectorAll('.status-option').forEach(option => {
+                option.classList.remove('selected');
+                if (option.dataset.status === bed.status) {
+                    option.classList.add('selected');
+                }
+            });
+            
+            document.getElementById('bedModal').style.display = 'flex';
+        }
+        
+        // Close modals
         function closeModal(modalId) {
             document.getElementById(modalId).style.display = 'none';
         }
         
         // Event listeners for modals
         document.getElementById('addDepartmentBtn').addEventListener('click', () => {
-            openModal('departmentModal');
+            document.getElementById('departmentName').value = '';
+            document.getElementById('bedNumbers').value = '';
+            document.getElementById('departmentModalHeader').textContent = 'Add New Department';
+            document.getElementById('departmentModal').style.display = 'flex';
         });
         
         document.getElementById('viewHistoryBtn').addEventListener('click', () => {
-            openModal('historyModal');
+            renderHistory();
+            document.getElementById('historyModal').style.display = 'flex';
         });
         
-        closeButtons.forEach(button => {
+        document.querySelectorAll('.close-modal').forEach(button => {
             button.addEventListener('click', function() {
                 const modal = this.closest('.modal');
-                closeModal(modal.id);
+                modal.style.display = 'none';
             });
         });
+        
+        document.getElementById('cancelBedBtn').addEventListener('click', () => {
+            closeModal('bedModal');
+        });
+        
+        document.getElementById('saveBedBtn').addEventListener('click', () => {
+            alert('Bed status and notes saved successfully!');
+            closeModal('bedModal');
+        });
+        
+        document.getElementById('cancelDepartmentBtn').addEventListener('click', () => {
+            closeModal('departmentModal');
+        });
+        
+        document.getElementById('saveDepartmentBtn').addEventListener('click', () => {
+            const name = document.getElementById('departmentName').value.trim();
+            if (!name) {
+                alert('Please enter a department name');
+                return;
+            }
+            alert(`Department "${name}" added successfully!`);
+            closeModal('departmentModal');
+        });
+        
+        document.getElementById('closeHistoryBtn').addEventListener('click', () => {
+            closeModal('historyModal');
+        });
+        
+        // Render history
+        function renderHistory() {
+            historyList.innerHTML = '';
+            
+            if (historyData.length === 0) {
+                historyList.innerHTML = '<div class="no-history">No treatment history available</div>';
+                return;
+            }
+            
+            historyData.forEach(historyItem => {
+                const historyEl = document.createElement('div');
+                historyEl.className = 'history-item';
+                
+                // Check if this is today's history
+                const today = formatDate(new Date());
+                const isToday = historyItem.date === today;
+                
+                historyEl.innerHTML = `
+                    <div class="history-date">
+                        ${historyItem.date}
+                        ${isToday ? '<span class="today-highlight">Today</span>' : ''}
+                    </div>
+                `;
+                
+                historyItem.departments.forEach(dept => {
+                    const deptEl = document.createElement('div');
+                    deptEl.className = 'history-department';
+                    
+                    // Choose icon based on department name
+                    let iconClass = 'fas fa-clinic-medical';
+                    if (dept.name.includes('Male')) iconClass = 'fas fa-male';
+                    if (dept.name.includes('Female')) iconClass = 'fas fa-female';
+                    if (dept.name.includes('Pediatrics')) iconClass = 'fas fa-child';
+                    
+                    deptEl.innerHTML = `
+                        <i class="${iconClass}"></i> ${dept.name}
+                    `;
+                    
+                    historyEl.appendChild(deptEl);
+                    
+                    dept.beds.forEach(bed => {
+                        const bedEl = document.createElement('div');
+                        bedEl.className = 'history-bed';
+                        
+                        const statusClass = `history-bed-${bed.status}`;
+                        
+                        bedEl.innerHTML = `
+                            <span class="history-bed-status ${statusClass}"></span>
+                            Bed ${bed.number}: ${bed.notes || 'No notes'}
+                        `;
+                        
+                        historyEl.appendChild(bedEl);
+                    });
+                });
+                
+                historyList.appendChild(historyEl);
+            });
+        }
+        
+        // Initialize the app
+        updateDateDisplay();
+        renderDepartments();
         
         // Close modals when clicking outside
         window.addEventListener('click', (e) => {
-            modals.forEach(modal => {
-                if (e.target === modal) {
-                    closeModal(modal.id);
-                }
-            });
+            if (e.target.classList.contains('modal')) {
+                e.target.style.display = 'none';
+            }
         });
         
         // Bed status selection
@@ -860,28 +1164,6 @@
                 this.classList.add('selected');
             });
         });
-        
-        // Initialize the app
-        updateDateDisplay();
-        
-        // Sample function to simulate bed click
-        document.querySelectorAll('.bed').forEach(bed => {
-            if (!bed.classList.contains('add-bed')) {
-                bed.addEventListener('click', function() {
-                    const deptName = this.closest('.department').querySelector('.department-name').textContent;
-                    const bedNumber = this.querySelector('.bed-number').textContent;
-                    document.getElementById('modalHeader').textContent = `Bed #${bedNumber} - ${deptName}`;
-                    openModal('bedModal');
-                });
-            }
-        });
-        
-        // Simulate adding a new bed
-        document.querySelectorAll('.add-bed').forEach(addBtn => {
-            addBtn.addEventListener('click', function() {
-                alert('New bed added to department');
-            });
-        });
     </script>
 </body>
-</html>
+                    </html>
