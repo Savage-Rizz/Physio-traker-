@@ -761,7 +761,8 @@
     
     <script>
         // --- Global Variables ---
-        let currentDate = new Date();
+        let currentDate = new Date(); // Initialize with the current date
+        
         // Structure to store all data: departments and their beds, plus daily history
         // departments and bed statuses are now stored PER DAY
         let allData = JSON.parse(localStorage.getItem('physioTrackingData')) || {
@@ -1223,11 +1224,8 @@
         }
         
         // --- Initialization ---
-        // Set currentDate to match the screenshot for consistency on first load
-        // This is primarily for demonstration; in a real app, you might want it to be new Date()
-        // const initialDate = new Date('2025-06-11T00:00:00'); // Set to June 11, 2025
-        // currentDate = initialDate;
-        
+        // currentDate is already initialized to new Date() at the top of the script.
+        // This ensures it always starts with the current system date.
         updateDateDisplay();
         
     </script>
