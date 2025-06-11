@@ -1224,9 +1224,10 @@
         }
         
         // --- Initialization ---
-        // currentDate is already initialized to new Date() at the top of the script.
-        // This ensures it always starts with the current system date.
-        updateDateDisplay();
+        // Ensure the date is displayed immediately when the DOM is ready
+        document.addEventListener('DOMContentLoaded', () => {
+            updateDateDisplay();
+        });
         
     </script>
 </body>
