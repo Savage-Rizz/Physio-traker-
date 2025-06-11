@@ -4,77 +4,223 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Physiotherapy Patient Tracking</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        :root {
+            --primary: #3498db;
+            --secondary: #2c3e50;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --light: #f5f7fa;
+            --dark: #34495e;
+            --gray: #95a5a6;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f5f7fa;
+            background-color: #f0f7ff;
             color: #333;
+            line-height: 1.6;
+            padding: 20px;
         }
         
         .container {
             max-width: 1200px;
             margin: 0 auto;
-        }
-        
-        h1 {
-            color: #2c3e50;
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        
-        .add-department {
-            background-color: #fff;
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
-        }
-        
-        .department {
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
             overflow: hidden;
         }
         
-        .department-header {
-            background-color: #3498db;
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        h1 i {
+            font-size: 2.2rem;
+        }
+        
+        .date-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .date-picker {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.2);
             padding: 10px 15px;
+            border-radius: 50px;
+        }
+        
+        .date-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s;
+        }
+        
+        .date-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        #currentDate {
+            font-size: 1.2rem;
+            font-weight: 600;
+            min-width: 150px;
+            text-align: center;
+        }
+        
+        .content {
+            padding: 25px;
+        }
+        
+        .add-department {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            margin-bottom: 25px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .action-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 6px rgba(52, 152, 219, 0.3);
+        }
+        
+        .action-btn:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+        
+        .action-btn i {
+            font-size: 1.1rem;
+        }
+        
+        .history-btn {
+            background-color: var(--secondary);
+        }
+        
+        .history-btn:hover {
+            background-color: #1a252f;
+        }
+        
+        .department {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+            margin-bottom: 25px;
+            overflow: hidden;
+            transition: transform 0.3s;
+        }
+        
+        .department:hover {
+            transform: translateY(-3px);
+        }
+        
+        .department-header {
+            background: linear-gradient(135deg, var(--primary), #4aa1d8);
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
         }
         
         .department-name {
             font-weight: bold;
-            font-size: 1.1em;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
         
-        .department-actions button {
-            background-color: #2980b9;
+        .department-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .dept-btn {
+            background-color: rgba(255, 255, 255, 0.2);
             color: white;
             border: none;
-            padding: 5px 10px;
-            border-radius: 4px;
+            padding: 8px 15px;
+            border-radius: 50px;
             cursor: pointer;
-            margin-left: 5px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s;
+        }
+        
+        .dept-btn:hover {
+            background-color: rgba(255, 255, 255, 0.3);
         }
         
         .beds-container {
             display: flex;
             flex-wrap: wrap;
-            padding: 15px;
-            gap: 10px;
+            padding: 20px;
+            gap: 15px;
         }
         
         .bed {
-            width: 60px;
-            height: 60px;
-            border-radius: 8px;
+            width: 70px;
+            height: 70px;
+            border-radius: 10px;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -82,36 +228,62 @@
             cursor: pointer;
             transition: all 0.3s;
             position: relative;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
         }
         
         .bed-number {
             font-weight: bold;
-            font-size: 1.2em;
+            font-size: 1.4rem;
         }
         
         .bed-status {
-            font-size: 0.8em;
+            font-size: 0.85rem;
             margin-top: 3px;
+            font-weight: 500;
         }
         
         .bed-pending {
-            background-color: #f39c12;
+            background-color: var(--warning);
             color: white;
         }
         
         .bed-completed {
-            background-color: #2ecc71;
+            background-color: var(--success);
             color: white;
         }
         
         .bed-not-done {
-            background-color: #e74c3c;
+            background-color: var(--danger);
             color: white;
         }
         
         .bed:hover {
-            transform: scale(1.05);
-            box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+            transform: scale(1.08);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+        }
+        
+        .note-indicator {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.75rem;
+        }
+        
+        .add-bed {
+            background-color: var(--gray);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
         }
         
         .modal {
@@ -121,7 +293,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0,0,0,0.5);
+            background-color: rgba(0, 0, 0, 0.7);
             z-index: 1000;
             justify-content: center;
             align-items: center;
@@ -129,126 +301,343 @@
         
         .modal-content {
             background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            width: 400px;
+            padding: 30px;
+            border-radius: 12px;
+            width: 450px;
             max-width: 90%;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
         }
         
         .modal-header {
             font-weight: bold;
-            font-size: 1.2em;
-            margin-bottom: 15px;
-            color: #2c3e50;
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            color: var(--secondary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray);
         }
         
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
         
         .form-group label {
             display: block;
-            margin-bottom: 5px;
-            font-weight: 500;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark);
         }
         
-        .form-group input, .form-group textarea {
+        .form-group input, .form-group textarea, .form-group select {
             width: 100%;
-            padding: 8px;
+            padding: 12px;
             border: 1px solid #ddd;
-            border-radius: 4px;
-            box-sizing: border-box;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:focus, .form-group textarea:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
         }
         
         .form-group textarea {
-            height: 100px;
+            height: 120px;
             resize: vertical;
         }
         
         .status-options {
             display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
+            gap: 15px;
+            margin-bottom: 20px;
         }
         
         .status-option {
-            padding: 8px 15px;
-            border-radius: 4px;
+            padding: 12px 20px;
+            border-radius: 8px;
             cursor: pointer;
             border: 2px solid transparent;
+            flex: 1;
+            text-align: center;
+            font-weight: 600;
+            transition: all 0.3s;
         }
         
         .status-option.selected {
-            border-color: #2c3e50;
+            border-color: var(--secondary);
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
         
         .status-option.completed {
-            background-color: #2ecc71;
+            background-color: var(--success);
             color: white;
         }
         
         .status-option.not-done {
-            background-color: #e74c3c;
+            background-color: var(--danger);
             color: white;
         }
         
         .modal-actions {
             display: flex;
             justify-content: flex-end;
-            gap: 10px;
-            margin-top: 20px;
+            gap: 12px;
+            margin-top: 25px;
         }
         
-        .modal-actions button {
-            padding: 8px 15px;
-            border-radius: 4px;
+        .modal-btn {
+            padding: 12px 25px;
+            border-radius: 8px;
             cursor: pointer;
             border: none;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s;
         }
         
-        .modal-actions .save-btn {
-            background-color: #3498db;
+        .save-btn {
+            background-color: var(--primary);
             color: white;
         }
         
-        .modal-actions .cancel-btn {
-            background-color: #95a5a6;
+        .save-btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .cancel-btn {
+            background-color: var(--gray);
             color: white;
         }
         
-        .note-indicator {
-            position: absolute;
-            bottom: 5px;
-            right: 5px;
-            background-color: rgba(0,0,0,0.7);
-            color: white;
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
+        .cancel-btn:hover {
+            background-color: #7f8c8d;
+        }
+        
+        .history-modal .modal-content {
+            width: 800px;
+            max-width: 95%;
+        }
+        
+        .history-list {
+            max-height: 500px;
+            overflow-y: auto;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 10px;
+        }
+        
+        .history-item {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .history-item:last-child {
+            border-bottom: none;
+        }
+        
+        .history-date {
+            font-weight: bold;
+            color: var(--secondary);
+            margin-bottom: 5px;
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
+        }
+        
+        .history-department {
+            font-weight: 600;
+            margin: 10px 0 5px 15px;
+            color: var(--primary);
+        }
+        
+        .history-bed {
+            display: flex;
             align-items: center;
-            font-size: 0.7em;
+            gap: 10px;
+            margin-left: 30px;
+            margin-bottom: 8px;
+        }
+        
+        .history-bed-status {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        .history-bed-completed {
+            background-color: var(--success);
+        }
+        
+        .history-bed-not-done {
+            background-color: var(--danger);
+        }
+        
+        .history-bed-pending {
+            background-color: var(--warning);
+        }
+        
+        .history-notes {
+            margin-left: 30px;
+            padding: 8px;
+            background-color: #f8f9fa;
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+        
+        .no-history {
+            text-align: center;
+            padding: 20px;
+            color: var(--gray);
+            font-style: italic;
+        }
+        
+        .today-highlight {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 5px 15px;
+            border-radius: 50px;
+            font-weight: 600;
+        }
+        
+        @media (max-width: 768px) {
+            .date-controls {
+                flex-direction: column;
+            }
+            
+            .department-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .department-actions {
+                width: 100%;
+                justify-content: flex-end;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Physiotherapy Patient Tracking</h1>
+        <header>
+            <h1><i class="fas fa-hospital-user"></i> Physiotherapy Patient Tracking</h1>
+            <div class="date-controls">
+                <button class="action-btn" id="prevDateBtn"><i class="fas fa-chevron-left"></i></button>
+                
+                <div class="date-picker">
+                    <button class="date-btn" id="prevDayBtn"><i class="fas fa-chevron-left"></i></button>
+                    <div id="currentDate">May 20, 2024</div>
+                    <button class="date-btn" id="nextDayBtn"><i class="fas fa-chevron-right"></i></button>
+                </div>
+                
+                <button class="action-btn" id="todayBtn">
+                    <i class="fas fa-calendar-day"></i> Today
+                </button>
+                
+                <button class="action-btn" id="nextDateBtn"><i class="fas fa-chevron-right"></i></button>
+            </div>
+        </header>
         
-        <div class="add-department">
-            <button id="addDepartmentBtn">+ Add New Department</button>
-        </div>
-        
-        <div id="departmentsContainer">
-            <!-- Departments will be added here dynamically -->
+        <div class="content">
+            <div class="add-department">
+                <button class="action-btn" id="addDepartmentBtn">
+                    <i class="fas fa-plus"></i> Add New Department
+                </button>
+                
+                <button class="action-btn history-btn" id="viewHistoryBtn">
+                    <i class="fas fa-history"></i> View History
+                </button>
+            </div>
+            
+            <div id="departmentsContainer">
+                <!-- Departments will be added here dynamically -->
+                <div class="department">
+                    <div class="department-header">
+                        <div class="department-name">
+                            <i class="fas fa-male"></i> Male Medicine 1
+                        </div>
+                        <div class="department-actions">
+                            <button class="dept-btn"><i class="fas fa-edit"></i> Edit</button>
+                            <button class="dept-btn"><i class="fas fa-trash"></i> Delete</button>
+                        </div>
+                    </div>
+                    <div class="beds-container">
+                        <div class="bed bed-completed">
+                            <div class="bed-number">1</div>
+                            <div class="bed-status">Done</div>
+                            <div class="note-indicator">N</div>
+                        </div>
+                        <div class="bed bed-pending">
+                            <div class="bed-number">2</div>
+                            <div class="bed-status">Pending</div>
+                        </div>
+                        <div class="bed bed-not-done">
+                            <div class="bed-number">3</div>
+                            <div class="bed-status">Not Done</div>
+                        </div>
+                        <div class="bed add-bed">
+                            <div class="bed-number">+</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="department">
+                    <div class="department-header">
+                        <div class="department-name">
+                            <i class="fas fa-female"></i> Female Surgery
+                        </div>
+                        <div class="department-actions">
+                            <button class="dept-btn"><i class="fas fa-edit"></i> Edit</button>
+                            <button class="dept-btn"><i class="fas fa-trash"></i> Delete</button>
+                        </div>
+                    </div>
+                    <div class="beds-container">
+                        <div class="bed bed-completed">
+                            <div class="bed-number">1</div>
+                            <div class="bed-status">Done</div>
+                        </div>
+                        <div class="bed bed-completed">
+                            <div class="bed-number">2</div>
+                            <div class="bed-status">Done</div>
+                        </div>
+                        <div class="bed bed-pending">
+                            <div class="bed-number">3</div>
+                            <div class="bed-status">Pending</div>
+                        </div>
+                        <div class="bed bed-pending">
+                            <div class="bed-number">4</div>
+                            <div class="bed-status">Pending</div>
+                        </div>
+                        <div class="bed add-bed">
+                            <div class="bed-number">+</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     
     <!-- Modal for bed status/notes -->
     <div class="modal" id="bedModal">
         <div class="modal-content">
-            <div class="modal-header" id="modalHeader">Bed #1 - Male Medicine 1</div>
+            <div class="modal-header">
+                <span id="modalHeader">Bed #1 - Male Medicine 1</span>
+                <button class="close-modal">&times;</button>
+            </div>
             
             <div class="status-options">
                 <div class="status-option completed selected" data-status="completed">Completed</div>
@@ -256,13 +645,13 @@
             </div>
             
             <div class="form-group">
-                <label for="bedNotes">Notes:</label>
+                <label for="bedNotes"><i class="fas fa-notes-medical"></i> Treatment Notes:</label>
                 <textarea id="bedNotes" placeholder="Enter treatment details, exercises, or other notes..."></textarea>
             </div>
             
             <div class="modal-actions">
-                <button class="cancel-btn" id="cancelBedBtn">Cancel</button>
-                <button class="save-btn" id="saveBedBtn">Save</button>
+                <button class="modal-btn cancel-btn" id="cancelBedBtn">Cancel</button>
+                <button class="modal-btn save-btn" id="saveBedBtn">Save</button>
             </div>
         </div>
     </div>
@@ -270,318 +659,229 @@
     <!-- Modal for adding/editing department -->
     <div class="modal" id="departmentModal">
         <div class="modal-content">
-            <div class="modal-header" id="departmentModalHeader">Add New Department</div>
+            <div class="modal-header">
+                <span id="departmentModalHeader">Add New Department</span>
+                <button class="close-modal">&times;</button>
+            </div>
             
             <div class="form-group">
-                <label for="departmentName">Department Name:</label>
+                <label for="departmentName"><i class="fas fa-clinic-medical"></i> Department Name:</label>
                 <input type="text" id="departmentName" placeholder="e.g. Male Medicine 1">
             </div>
             
             <div class="form-group">
-                <label for="bedNumbers">Bed Numbers (comma separated):</label>
+                <label for="bedNumbers"><i class="fas fa-bed"></i> Bed Numbers (comma separated):</label>
                 <input type="text" id="bedNumbers" placeholder="e.g. 1,2,3,4,5,7,8">
             </div>
             
             <div class="modal-actions">
-                <button class="cancel-btn" id="cancelDepartmentBtn">Cancel</button>
-                <button class="save-btn" id="saveDepartmentBtn">Save</button>
+                <button class="modal-btn cancel-btn" id="cancelDepartmentBtn">Cancel</button>
+                <button class="modal-btn save-btn" id="saveDepartmentBtn">Save</button>
             </div>
         </div>
     </div>
     
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-database-compat.js"></script>
+    <!-- Modal for viewing history -->
+    <div class="modal history-modal" id="historyModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span>Treatment History</span>
+                <button class="close-modal">&times;</button>
+            </div>
+            
+            <div class="history-list" id="historyList">
+                <div class="history-item">
+                    <div class="history-date">May 20, 2024 <span class="today-highlight">Today</span></div>
+                    
+                    <div class="history-department">
+                        <i class="fas fa-male"></i> Male Medicine 1
+                    </div>
+                    <div class="history-bed">
+                        <span class="history-bed-status history-bed-completed"></span>
+                        Bed 1: ROM exercises, gait training
+                    </div>
+                    <div class="history-bed">
+                        <span class="history-bed-status history-bed-pending"></span>
+                        Bed 2: Not treated yet
+                    </div>
+                    
+                    <div class="history-department">
+                        <i class="fas fa-female"></i> Female Surgery
+                    </div>
+                    <div class="history-bed">
+                        <span class="history-bed-status history-bed-completed"></span>
+                        Bed 1: Post-op mobility
+                    </div>
+                    <div class="history-notes">
+                        Patient showed good progress in walking with support
+                    </div>
+                </div>
+                
+                <div class="history-item">
+                    <div class="history-date">May 19, 2024</div>
+                    
+                    <div class="history-department">
+                        <i class="fas fa-male"></i> Male Medicine 1
+                    </div>
+                    <div class="history-bed">
+                        <span class="history-bed-status history-bed-completed"></span>
+                        Bed 1: Breathing exercises
+                    </div>
+                    <div class="history-notes">
+                        Patient reported reduced pain after treatment
+                    </div>
+                    
+                    <div class="history-department">
+                        <i class="fas fa-female"></i> Female Surgery
+                    </div>
+                    <div class="history-bed">
+                        <span class="history-bed-status history-bed-completed"></span>
+                        Bed 2: Shoulder ROM exercises
+                    </div>
+                </div>
+                
+                <div class="history-item">
+                    <div class="history-date">May 18, 2024</div>
+                    
+                    <div class="history-department">
+                        <i class="fas fa-female"></i> Female Surgery
+                    </div>
+                    <div class="history-bed">
+                        <span class="history-bed-status history-bed-completed"></span>
+                        Bed 3: Mobility exercises
+                    </div>
+                    <div class="history-notes">
+                        Patient able to walk 20m with minimal assistance
+                    </div>
+                </div>
+            </div>
+            
+            <div class="modal-actions">
+                <button class="modal-btn cancel-btn" id="closeHistoryBtn">Close</button>
+            </div>
+        </div>
+    </div>
     
     <script>
-        // Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyDAUsHLgTYmj3a-euySuWAk93C99asdEF4",
-            authDomain: "physio-traker.firebaseapp.com",
-            databaseURL: "https://physio-traker-default-rtdb.firebaseio.com",
-            projectId: "physio-traker",
-            storageBucket: "physio-traker.firebasestorage.app",
-            messagingSenderId: "966541115025",
-            appId: "1:966541115025:web:4ad7b04be7f58c2efcc930",
-            measurementId: "G-TRH5CKN25N"
-        };
-
-        // Initialize Firebase
-        const app = firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
-        const departmentsRef = database.ref('departments');
+        // Date handling
+        let currentDate = new Date();
         
-        // Global variables
-        let departments = [];
-        let currentBed = null;
-        let currentDepartment = null;
-        let currentDepartmentForEdit = null;
-        let nextDeptId = 1;
-
+        // Format date as "Month Day, Year"
+        function formatDate(date) {
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            return date.toLocaleDateString('en-US', options);
+        }
+        
+        // Format date as YYYY-MM-DD for Firebase
+        function formatDateForFirebase(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+        
+        // Update the displayed date
+        function updateDateDisplay() {
+            document.getElementById('currentDate').textContent = formatDate(currentDate);
+        }
+        
+        // Navigate to previous day
+        document.getElementById('prevDayBtn').addEventListener('click', () => {
+            currentDate.setDate(currentDate.getDate() - 1);
+            updateDateDisplay();
+            loadDataForDate();
+        });
+        
+        // Navigate to next day
+        document.getElementById('nextDayBtn').addEventListener('click', () => {
+            currentDate.setDate(currentDate.getDate() + 1);
+            updateDateDisplay();
+            loadDataForDate();
+        });
+        
+        // Go to today
+        document.getElementById('todayBtn').addEventListener('click', () => {
+            currentDate = new Date();
+            updateDateDisplay();
+            loadDataForDate();
+        });
+        
+        // Simulate loading data for selected date
+        function loadDataForDate() {
+            console.log("Loading data for", formatDateForFirebase(currentDate));
+            // In a real app, this would load from Firebase
+        }
+        
+        // Modal handling
+        const modals = document.querySelectorAll('.modal');
+        const closeButtons = document.querySelectorAll('.close-modal');
+        
+        // Open modal function
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = 'flex';
+        }
+        
+        // Close modal function
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+        
+        // Event listeners for modals
+        document.getElementById('addDepartmentBtn').addEventListener('click', () => {
+            openModal('departmentModal');
+        });
+        
+        document.getElementById('viewHistoryBtn').addEventListener('click', () => {
+            openModal('historyModal');
+        });
+        
+        closeButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const modal = this.closest('.modal');
+                closeModal(modal.id);
+            });
+        });
+        
+        // Close modals when clicking outside
+        window.addEventListener('click', (e) => {
+            modals.forEach(modal => {
+                if (e.target === modal) {
+                    closeModal(modal.id);
+                }
+            });
+        });
+        
+        // Bed status selection
+        document.querySelectorAll('.status-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.status-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                this.classList.add('selected');
+            });
+        });
+        
         // Initialize the app
-        function init() {
-            departmentsRef.on('value', (snapshot) => {
-                const data = snapshot.val();
-                if (data) {
-                    departments = Object.values(data);
-                    nextDeptId = Math.max(...departments.map(d => d.id)) + 1;
-                } else {
-                    departments = [];
-                    nextDeptId = 1;
-                }
-                renderDepartments();
-            });
-            setupEventListeners();
-        }
-
-        // Render all departments and their beds
-        function renderDepartments() {
-            const container = document.getElementById('departmentsContainer');
-            container.innerHTML = '';
-            
-            departments.forEach(dept => {
-                const departmentEl = document.createElement('div');
-                departmentEl.className = 'department';
-                
-                // Department header
-                const headerEl = document.createElement('div');
-                headerEl.className = 'department-header';
-                headerEl.innerHTML = `
-                    <div class="department-name">${dept.name}</div>
-                    <div class="department-actions">
-                        <button class="edit-dept" data-id="${dept.id}">Edit</button>
-                        <button class="delete-dept" data-id="${dept.id}">Delete</button>
-                    </div>
-                `;
-                
-                // Beds container
-                const bedsContainer = document.createElement('div');
-                bedsContainer.className = 'beds-container';
-                
-                // Add each bed
-                dept.beds.forEach(bed => {
-                    const bedEl = document.createElement('div');
-                    bedEl.className = `bed bed-${bed.status}`;
-                    bedEl.innerHTML = `
-                        <div class="bed-number">${bed.number}</div>
-                        <div class="bed-status">${formatStatus(bed.status)}</div>
-                        ${bed.notes ? '<div class="note-indicator">N</div>' : ''}
-                    `;
-                    
-                    bedEl.addEventListener('click', () => {
-                        openBedModal(dept, bed);
-                    });
-                    
-                    bedsContainer.appendChild(bedEl);
+        updateDateDisplay();
+        
+        // Sample function to simulate bed click
+        document.querySelectorAll('.bed').forEach(bed => {
+            if (!bed.classList.contains('add-bed')) {
+                bed.addEventListener('click', function() {
+                    const deptName = this.closest('.department').querySelector('.department-name').textContent;
+                    const bedNumber = this.querySelector('.bed-number').textContent;
+                    document.getElementById('modalHeader').textContent = `Bed #${bedNumber} - ${deptName}`;
+                    openModal('bedModal');
                 });
-                
-                // Add "Add Bed" button
-                const addBedBtn = document.createElement('div');
-                addBedBtn.className = 'bed';
-                addBedBtn.innerHTML = '<div class="bed-number">+</div>';
-                addBedBtn.style.backgroundColor = '#95a5a6';
-                addBedBtn.style.color = 'white';
-                addBedBtn.addEventListener('click', () => {
-                    addNewBed(dept);
-                });
-                
-                bedsContainer.appendChild(addBedBtn);
-                departmentEl.appendChild(headerEl);
-                departmentEl.appendChild(bedsContainer);
-                container.appendChild(departmentEl);
+            }
+        });
+        
+        // Simulate adding a new bed
+        document.querySelectorAll('.add-bed').forEach(addBtn => {
+            addBtn.addEventListener('click', function() {
+                alert('New bed added to department');
             });
-        }
-
-        // Format status for display
-        function formatStatus(status) {
-            const statusMap = {
-                'pending': 'Pending',
-                'completed': 'Done',
-                'not-done': 'Not Done'
-            };
-            return statusMap[status] || status;
-        }
-
-        // Open bed modal with current data
-        function openBedModal(dept, bed) {
-            currentDepartment = dept;
-            currentBed = bed;
-            
-            document.getElementById('modalHeader').textContent = `Bed #${bed.number} - ${dept.name}`;
-            document.getElementById('bedNotes').value = bed.notes || '';
-            
-            // Set selected status
-            document.querySelectorAll('.status-option').forEach(option => {
-                option.classList.remove('selected');
-                if (option.dataset.status === bed.status) {
-                    option.classList.add('selected');
-                }
-            });
-            
-            document.getElementById('bedModal').style.display = 'flex';
-        }
-
-        // Add a new bed to a department
-        function addNewBed(dept) {
-            const newBedNumber = dept.beds.length > 0 ? Math.max(...dept.beds.map(b => b.number)) + 1 : 1;
-            const newBed = {
-                number: newBedNumber,
-                status: 'pending',
-                notes: ''
-            };
-            
-            dept.beds.push(newBed);
-            saveDepartmentToFirebase(dept);
-        }
-
-        // Save department to Firebase
-        function saveDepartmentToFirebase(dept) {
-            departmentsRef.child(dept.id).set(dept);
-        }
-
-        // Delete department from Firebase
-        function deleteDepartmentFromFirebase(deptId) {
-            departmentsRef.child(deptId).remove();
-        }
-
-        // Setup event listeners
-        function setupEventListeners() {
-            // Add department button
-            document.getElementById('addDepartmentBtn').addEventListener('click', () => {
-                currentDepartmentForEdit = null;
-                document.getElementById('departmentName').value = '';
-                document.getElementById('bedNumbers').value = '';
-                document.getElementById('departmentModalHeader').textContent = 'Add New Department';
-                document.getElementById('departmentModal').style.display = 'flex';
-            });
-            
-            // Status option clicks
-            document.querySelectorAll('.status-option').forEach(option => {
-                option.addEventListener('click', () => {
-                    document.querySelectorAll('.status-option').forEach(opt => {
-                        opt.classList.remove('selected');
-                    });
-                    option.classList.add('selected');
-                });
-            });
-            
-            // Save bed changes
-            document.getElementById('saveBedBtn').addEventListener('click', () => {
-                if (currentBed && currentDepartment) {
-                    const selectedStatus = document.querySelector('.status-option.selected').dataset.status;
-                    const notes = document.getElementById('bedNotes').value;
-                    
-                    currentBed.status = selectedStatus;
-                    currentBed.notes = notes;
-                    
-                    saveDepartmentToFirebase(currentDepartment);
-                    document.getElementById('bedModal').style.display = 'none';
-                }
-            });
-            
-            // Cancel bed modal
-            document.getElementById('cancelBedBtn').addEventListener('click', () => {
-                document.getElementById('bedModal').style.display = 'none';
-            });
-            
-            // Save department
-            document.getElementById('saveDepartmentBtn').addEventListener('click', () => {
-                const name = document.getElementById('departmentName').value.trim();
-                const bedsInput = document.getElementById('bedNumbers').value.trim();
-                
-                if (!name) {
-                    alert('Please enter a department name');
-                    return;
-                }
-                
-                if (!bedsInput) {
-                    alert('Please enter bed numbers');
-                    return;
-                }
-                
-                // Parse bed numbers
-                const bedNumbers = bedsInput.split(',')
-                    .map(num => num.trim())
-                    .filter(num => num !== '')
-                    .map(num => isNaN(num) ? num : parseInt(num));
-                
-                if (currentDepartmentForEdit) {
-                    // Edit existing department
-                    const dept = departments.find(d => d.id === currentDepartmentForEdit);
-                    if (dept) {
-                        dept.name = name;
-                        
-                        // Create new beds array
-                        const existingBedsMap = {};
-                        dept.beds.forEach(bed => {
-                            existingBedsMap[bed.number] = bed;
-                        });
-                        
-                        const newBeds = [];
-                        bedNumbers.forEach(num => {
-                            if (existingBedsMap[num]) {
-                                newBeds.push(existingBedsMap[num]);
-                            } else {
-                                newBeds.push({
-                                    number: num,
-                                    status: 'pending',
-                                    notes: ''
-                                });
-                            }
-                        });
-                        
-                        dept.beds = newBeds;
-                        saveDepartmentToFirebase(dept);
-                    }
-                } else {
-                    // Add new department
-                    const newDepartment = {
-                        id: nextDeptId++,
-                        name: name,
-                        beds: bedNumbers.map(num => ({
-                            number: num,
-                            status: 'pending',
-                            notes: ''
-                        }))
-                    };
-                    
-                    saveDepartmentToFirebase(newDepartment);
-                }
-                
-                document.getElementById('departmentModal').style.display = 'none';
-            });
-            
-            // Cancel department modal
-            document.getElementById('cancelDepartmentBtn').addEventListener('click', () => {
-                document.getElementById('departmentModal').style.display = 'none';
-            });
-            
-            // Edit/delete department (delegated events)
-            document.getElementById('departmentsContainer').addEventListener('click', (e) => {
-                if (e.target.classList.contains('edit-dept')) {
-                    const deptId = parseInt(e.target.dataset.id);
-                    const dept = departments.find(d => d.id === deptId);
-                    
-                    if (dept) {
-                        currentDepartmentForEdit = deptId;
-                        document.getElementById('departmentName').value = dept.name;
-                        document.getElementById('bedNumbers').value = dept.beds.map(b => b.number).join(', ');
-                        document.getElementById('departmentModalHeader').textContent = 'Edit Department';
-                        document.getElementById('departmentModal').style.display = 'flex';
-                    }
-                }
-                
-                if (e.target.classList.contains('delete-dept')) {
-                    if (confirm('Are you sure you want to delete this department?')) {
-                        const deptId = parseInt(e.target.dataset.id);
-                        deleteDepartmentFromFirebase(deptId);
-                    }
-                }
-            });
-        }
-
-        // Initialize the app
-        init();
+        });
     </script>
 </body>
 </html>
