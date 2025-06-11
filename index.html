@@ -230,70 +230,18 @@
             align-items: center;
             font-size: 0.7em;
         }
-
-        .login-container {
-            max-width: 400px;
-            margin: 50px auto;
-            padding: 20px;
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-
-        .login-container h2 {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .login-container input {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-
-        .login-container button {
-            width: 100%;
-            padding: 10px;
-            background-color: #3498db;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        .login-container button:hover {
-            background-color: #2980b9;
-        }
-
-        .error-message {
-            color: #e74c3c;
-            text-align: center;
-            margin-top: 10px;
-        }
     </style>
 </head>
 <body>
-    <div id="app">
-        <div class="login-container" id="loginContainer">
-            <h2>Physio Tracker Login</h2>
-            <input type="email" id="email" placeholder="Email">
-            <input type="password" id="password" placeholder="Password">
-            <button id="loginBtn">Login</button>
-            <div class="error-message" id="loginError"></div>
+    <div class="container">
+        <h1>Physiotherapy Patient Tracking</h1>
+        
+        <div class="add-department">
+            <button id="addDepartmentBtn">+ Add New Department</button>
         </div>
-
-        <div class="container" id="mainApp" style="display: none;">
-            <h1>Physiotherapy Patient Tracking</h1>
-            
-            <div class="add-department">
-                <button id="addDepartmentBtn">+ Add New Department</button>
-            </div>
-            
-            <div id="departmentsContainer">
-                <!-- Departments will be added here dynamically -->
-            </div>
+        
+        <div id="departmentsContainer">
+            <!-- Departments will be added here dynamically -->
         </div>
     </div>
     
@@ -341,10 +289,10 @@
         </div>
     </div>
     
+    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-database-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
-
+    
     <script>
         // Firebase configuration
         const firebaseConfig = {
@@ -361,80 +309,25 @@
         // Initialize Firebase
         const app = firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
-        const auth = firebase.auth();
-
-        // Reference to your data
         const departmentsRef = database.ref('departments');
-
-        // App data
+        
+        // Global variables
         let departments = [];
         let currentBed = null;
         let currentDepartment = null;
         let currentDepartmentForEdit = null;
-
-        // DOM elements
-        const loginContainer = document.getElementById('loginContainer');
-        const mainApp = document.getElementById('mainApp');
-        const emailInput = document.getElementById('email');
-        const passwordInput = document.getElementById('password');
-        const loginBtn = document.getElementById('loginBtn');
-        const loginError = document.getElementById('loginError');
-        const departmentsContainer = document.getElementById('departmentsContainer');
-        const addDepartmentBtn = document.getElementById('addDepartmentBtn');
-        const bedModal = document.getElementById('bedModal');
-        const departmentModal = document.getElementById('departmentModal');
-        const modalHeader = document.getElementById('modalHeader');
-        const bedNotes = document.getElementById('bedNotes');
-        const saveBedBtn = document.getElementById('saveBedBtn');
-        const cancelBedBtn = document.getElementById('cancelBedBtn');
-        const statusOptions = document.querySelectorAll('.status-option');
-        const departmentNameInput = document.getElementById('departmentName');
-        const bedNumbersInput = document.getElementById('bedNumbers');
-        const saveDepartmentBtn = document.getElementById('saveDepartmentBtn');
-        const cancelDepartmentBtn = document.getElementById('cancelDepartmentBtn');
-
-        // Login functionality
-        loginBtn.addEventListener('click', () => {
-            const email = emailInput.value;
-            const password = passwordInput.value;
-            
-            auth.signInWithEmailAndPassword(email, password)
-                .then((userCredential) => {
-                    // Login successful
-                    loginContainer.style.display = 'none';
-                    mainApp.style.display = 'block';
-                    init();
-                })
-                .catch((error) => {
-                    loginError.textContent = error.message;
-                });
-        });
-
-        // Check auth state
-        auth.onAuthStateChanged((user) => {
-            if (user) {
-                // User is signed in
-                loginContainer.style.display = 'none';
-                mainApp.style.display = 'block';
-                init();
-            } else {
-                // No user is signed in
-                loginContainer.style.display = 'block';
-                mainApp.style.display = 'none';
-            }
-        });
+        let nextDeptId = 1;
 
         // Initialize the app
         function init() {
             departmentsRef.on('value', (snapshot) => {
                 const data = snapshot.val();
                 if (data) {
-                    departments = Object.keys(data).map(key => ({
-                        id: key,
-                        ...data[key]
-                    }));
+                    departments = Object.values(data);
+                    nextDeptId = Math.max(...departments.map(d => d.id)) + 1;
                 } else {
                     departments = [];
+                    nextDeptId = 1;
                 }
                 renderDepartments();
             });
@@ -443,13 +336,14 @@
 
         // Render all departments and their beds
         function renderDepartments() {
-            departmentsContainer.innerHTML = '';
+            const container = document.getElementById('departmentsContainer');
+            container.innerHTML = '';
             
             departments.forEach(dept => {
                 const departmentEl = document.createElement('div');
                 departmentEl.className = 'department';
                 
-                // Department header with name and actions
+                // Department header
                 const headerEl = document.createElement('div');
                 headerEl.className = 'department-header';
                 headerEl.innerHTML = `
@@ -465,23 +359,21 @@
                 bedsContainer.className = 'beds-container';
                 
                 // Add each bed
-                if (dept.beds) {
-                    dept.beds.forEach(bed => {
-                        const bedEl = document.createElement('div');
-                        bedEl.className = `bed bed-${bed.status}`;
-                        bedEl.innerHTML = `
-                            <div class="bed-number">${bed.number}</div>
-                            <div class="bed-status">${formatStatus(bed.status)}</div>
-                            ${bed.notes ? '<div class="note-indicator">N</div>' : ''}
-                        `;
-                        
-                        bedEl.addEventListener('click', () => {
-                            openBedModal(dept, bed);
-                        });
-                        
-                        bedsContainer.appendChild(bedEl);
+                dept.beds.forEach(bed => {
+                    const bedEl = document.createElement('div');
+                    bedEl.className = `bed bed-${bed.status}`;
+                    bedEl.innerHTML = `
+                        <div class="bed-number">${bed.number}</div>
+                        <div class="bed-status">${formatStatus(bed.status)}</div>
+                        ${bed.notes ? '<div class="note-indicator">N</div>' : ''}
+                    `;
+                    
+                    bedEl.addEventListener('click', () => {
+                        openBedModal(dept, bed);
                     });
-                }
+                    
+                    bedsContainer.appendChild(bedEl);
+                });
                 
                 // Add "Add Bed" button
                 const addBedBtn = document.createElement('div');
@@ -494,10 +386,9 @@
                 });
                 
                 bedsContainer.appendChild(addBedBtn);
-                
                 departmentEl.appendChild(headerEl);
                 departmentEl.appendChild(bedsContainer);
-                departmentsContainer.appendChild(departmentEl);
+                container.appendChild(departmentEl);
             });
         }
 
@@ -516,8 +407,8 @@
             currentDepartment = dept;
             currentBed = bed;
             
-            modalHeader.textContent = `Bed #${bed.number} - ${dept.name}`;
-            bedNotes.value = bed.notes || '';
+            document.getElementById('modalHeader').textContent = `Bed #${bed.number} - ${dept.name}`;
+            document.getElementById('bedNotes').value = bed.notes || '';
             
             // Set selected status
             document.querySelectorAll('.status-option').forEach(option => {
@@ -527,27 +418,17 @@
                 }
             });
             
-            bedModal.style.display = 'flex';
+            document.getElementById('bedModal').style.display = 'flex';
         }
 
         // Add a new bed to a department
         function addNewBed(dept) {
-            const currentBeds = dept.beds || [];
-            let newBedNumber = 1;
-            
-            if (currentBeds.length > 0) {
-                newBedNumber = Math.max(...currentBeds.map(b => b.number)) + 1;
-            }
-            
+            const newBedNumber = dept.beds.length > 0 ? Math.max(...dept.beds.map(b => b.number)) + 1 : 1;
             const newBed = {
                 number: newBedNumber,
                 status: 'pending',
                 notes: ''
             };
-            
-            if (!dept.beds) {
-                dept.beds = [];
-            }
             
             dept.beds.push(newBed);
             saveDepartmentToFirebase(dept);
@@ -566,16 +447,16 @@
         // Setup event listeners
         function setupEventListeners() {
             // Add department button
-            addDepartmentBtn.addEventListener('click', () => {
+            document.getElementById('addDepartmentBtn').addEventListener('click', () => {
                 currentDepartmentForEdit = null;
-                departmentNameInput.value = '';
-                bedNumbersInput.value = '';
+                document.getElementById('departmentName').value = '';
+                document.getElementById('bedNumbers').value = '';
                 document.getElementById('departmentModalHeader').textContent = 'Add New Department';
-                departmentModal.style.display = 'flex';
+                document.getElementById('departmentModal').style.display = 'flex';
             });
             
             // Status option clicks
-            statusOptions.forEach(option => {
+            document.querySelectorAll('.status-option').forEach(option => {
                 option.addEventListener('click', () => {
                     document.querySelectorAll('.status-option').forEach(opt => {
                         opt.classList.remove('selected');
@@ -585,29 +466,28 @@
             });
             
             // Save bed changes
-            saveBedBtn.addEventListener('click', () => {
+            document.getElementById('saveBedBtn').addEventListener('click', () => {
                 if (currentBed && currentDepartment) {
                     const selectedStatus = document.querySelector('.status-option.selected').dataset.status;
+                    const notes = document.getElementById('bedNotes').value;
                     
                     currentBed.status = selectedStatus;
-                    currentBed.notes = bedNotes.value;
+                    currentBed.notes = notes;
                     
-                    // Update the department in Firebase
                     saveDepartmentToFirebase(currentDepartment);
-                    
-                    bedModal.style.display = 'none';
+                    document.getElementById('bedModal').style.display = 'none';
                 }
             });
             
             // Cancel bed modal
-            cancelBedBtn.addEventListener('click', () => {
-                bedModal.style.display = 'none';
+            document.getElementById('cancelBedBtn').addEventListener('click', () => {
+                document.getElementById('bedModal').style.display = 'none';
             });
             
             // Save department
-            saveDepartmentBtn.addEventListener('click', () => {
-                const name = departmentNameInput.value.trim();
-                const bedsInput = bedNumbersInput.value.trim();
+            document.getElementById('saveDepartmentBtn').addEventListener('click', () => {
+                const name = document.getElementById('departmentName').value.trim();
+                const bedsInput = document.getElementById('bedNumbers').value.trim();
                 
                 if (!name) {
                     alert('Please enter a department name');
@@ -633,11 +513,9 @@
                         
                         // Create new beds array
                         const existingBedsMap = {};
-                        if (dept.beds) {
-                            dept.beds.forEach(bed => {
-                                existingBedsMap[bed.number] = bed;
-                            });
-                        }
+                        dept.beds.forEach(bed => {
+                            existingBedsMap[bed.number] = bed;
+                        });
                         
                         const newBeds = [];
                         bedNumbers.forEach(num => {
@@ -657,10 +535,8 @@
                     }
                 } else {
                     // Add new department
-                    const newId = Date.now().toString(); // Simple unique ID
-                    
                     const newDepartment = {
-                        id: newId,
+                        id: nextDeptId++,
                         name: name,
                         beds: bedNumbers.map(num => ({
                             number: num,
@@ -672,37 +548,40 @@
                     saveDepartmentToFirebase(newDepartment);
                 }
                 
-                departmentModal.style.display = 'none';
+                document.getElementById('departmentModal').style.display = 'none';
             });
             
             // Cancel department modal
-            cancelDepartmentBtn.addEventListener('click', () => {
-                departmentModal.style.display = 'none';
+            document.getElementById('cancelDepartmentBtn').addEventListener('click', () => {
+                document.getElementById('departmentModal').style.display = 'none';
             });
             
             // Edit/delete department (delegated events)
-            departmentsContainer.addEventListener('click', (e) => {
+            document.getElementById('departmentsContainer').addEventListener('click', (e) => {
                 if (e.target.classList.contains('edit-dept')) {
-                    const deptId = e.target.dataset.id;
+                    const deptId = parseInt(e.target.dataset.id);
                     const dept = departments.find(d => d.id === deptId);
                     
                     if (dept) {
                         currentDepartmentForEdit = deptId;
-                        departmentNameInput.value = dept.name;
-                        bedNumbersInput.value = dept.beds ? dept.beds.map(b => b.number).join(', ') : '';
+                        document.getElementById('departmentName').value = dept.name;
+                        document.getElementById('bedNumbers').value = dept.beds.map(b => b.number).join(', ');
                         document.getElementById('departmentModalHeader').textContent = 'Edit Department';
-                        departmentModal.style.display = 'flex';
+                        document.getElementById('departmentModal').style.display = 'flex';
                     }
                 }
                 
                 if (e.target.classList.contains('delete-dept')) {
                     if (confirm('Are you sure you want to delete this department?')) {
-                        const deptId = e.target.dataset.id;
+                        const deptId = parseInt(e.target.dataset.id);
                         deleteDepartmentFromFirebase(deptId);
                     }
                 }
             });
         }
+
+        // Initialize the app
+        init();
     </script>
 </body>
 </html>
