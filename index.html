@@ -738,10 +738,7 @@
                 <button class="copy-prev-day-btn" id="copyPreviousDayBtn">
                     <i class="fas fa-copy"></i> Copy Previous Day
                 </button>
-                <button class="simple-add-dept-btn" id="viewHistoryBtn">
-                    <i class="fas fa-history"></i> View History
-                </button>
-            </div>
+                </div>
             
             <div id="departmentsContainer">
                 <p id="noDepartmentsMessage" style="text-align: center; color: var(--gray); padding: 20px; font-style: italic; display: none;">No departments added yet. Click "Add New Department" to get started!</p>
@@ -798,23 +795,6 @@
         </div>
     </div>
     
-    <div class="modal history-modal" id="historyModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <span>Treatment History</span>
-                <button class="close-modal">&times;</button>
-            </div>
-            
-            <div class="history-list" id="historyList">
-                <p class="no-history">No history found for this date.</p>
-            </div>
-            
-            <div class="modal-actions">
-                <button class="modal-btn cancel-btn" id="closeHistoryBtn">Close</button>
-            </div>
-        </div>
-    </div>
-    
     <script>
         // --- Global Variables ---
         let currentDate = new Date(); // Initialize with the current date
@@ -830,7 +810,7 @@
         
         const departmentsContainer = document.getElementById('departmentsContainer');
         const noDepartmentsMessage = document.getElementById('noDepartmentsMessage');
-        const historyList = document.getElementById('historyList');
+        // const historyList = document.getElementById('historyList'); // Removed reference
 
         // New elements for start screen
         const initialScreen = document.getElementById('initialScreen');
@@ -912,7 +892,10 @@
         
         window.addEventListener('click', (e) => {
             modals.forEach(modal => {
-                if (e.target === modal) {
+                // Check if the clicked modal is *not* the history modal (which is now removed from HTML)
+                // This prevents issues if a modal with this ID is somehow still in the DOM or logic.
+                // For safety, we can explicitly check if the modal exists in the current DOM before trying to close.
+                if (e.target === modal && modal.id !== 'historyModal') { 
                     closeModal(modal.id);
                 }
             });
@@ -1204,95 +1187,15 @@
         });
         
         // --- History View ---
-        
-        document.getElementById('viewHistoryBtn').addEventListener('click', () => {
-            renderHistory();
-            openModal('historyModal');
-        });
-        
-        document.getElementById('closeHistoryBtn').addEventListener('click', () => {
-            closeModal('historyModal');
-        });
-        
-        function renderHistory() {
-            historyList.innerHTML = ''; // Clear previous history
-            
-            const sortedDates = Object.keys(allData.dailyRecords).sort((a, b) => new Date(b) - new Date(a)); // Newest first
-            
-            if (sortedDates.length === 0) {
-                historyList.innerHTML = '<p class="no-history">No history found yet.</p>';
-                return;
-            }
-            
-            let hasContent = false;
-            sortedDates.forEach(dateKey => {
-                const dateObj = new Date(dateKey + 'T00:00:00'); // Add T00:00:00 to avoid timezone issues
-                const displayDate = formatDate(dateObj);
-                const isToday = formatDateForData(new Date()) === dateKey;
-                
-                const dailyRecord = allData.dailyRecords[dateKey];
-                if (!dailyRecord || !dailyRecord.departments || dailyRecord.departments.length === 0) {
-                    return; // Skip if no departments for this date
-                }
-
-                const historyItemDiv = document.createElement('div');
-                historyItemDiv.classList.add('history-item');
-                
-                let departmentsHtml = '';
-                
-                // Sort departments by name for consistent history display
-                const sortedDepartments = [...dailyRecord.departments].sort((a, b) => a.name.localeCompare(b.name));
-                
-                let dailyRecordContentExists = false; // Flag to check if there's actual bed data for the date
-                sortedDepartments.forEach(department => {
-                    const bedsInDept = dailyRecord.bedStatuses[department.id] || {};
-                    
-                    let bedsHtmlForDept = '';
-                    // Sort beds by number
-                    const sortedBedNumbers = [...department.beds].sort((a,b) => a-b);
-                    
-                    sortedBedNumbers.forEach(bedNum => {
-                        const bedData = bedsInDept[bedNum];
-                        if (bedData) {
-                            bedsHtmlForDept += `
-                                <div class="history-bed">
-                                    <span class="history-bed-status history-bed-${bedData.status}"></span>
-                                    Bed ${bedNum}: ${bedData.status === 'completed' ? 'Treatment done.' : (bedData.status === 'dc-trf' ? 'D.C / TRF.' : 'No status.')}
-                                </div>
-                            `;
-                            if (bedData.notes.trim() !== '') {
-                                bedsHtmlForDept += `<div class="history-notes">${bedData.notes}</div>`;
-                            }
-                            dailyRecordContentExists = true;
-                        }
-                    });
-
-                    if (bedsHtmlForDept.trim() !== '') { // Only add department header if there are bed records
-                        departmentsHtml += `
-                            <div class="history-department">
-                                <i class="${department.icon || 'fas fa-hospital-user'}"></i> ${department.name}
-                            </div>
-                            ${bedsHtmlForDept}
-                        `;
-                    }
-                });
-                
-                if (dailyRecordContentExists) { // Only add history item if there's actual content for the day
-                    historyItemDiv.innerHTML = `
-                        <div class="history-date">
-                            ${displayDate} ${isToday ? '<span class="today-highlight">Today</span>' : ''}
-                        </div>
-                        ${departmentsHtml}
-                    `;
-                    historyList.appendChild(historyItemDiv);
-                    hasContent = true;
-                }
-            });
-            
-            if (!hasContent) {
-                historyList.innerHTML = '<p class="no-history">No history found yet.</p>';
-            }
-        }
+        // All history-related functions and event listeners are now removed.
+        // document.getElementById('viewHistoryBtn').addEventListener('click', () => {
+        //     renderHistory();
+        //     openModal('historyModal');
+        // });
+        // document.getElementById('closeHistoryBtn').addEventListener('click', () => {
+        //     closeModal('historyModal');
+        // });
+        // function renderHistory() { /* ... removed ... */ }
 
         // --- Copy Previous Day Functionality ---
         copyPreviousDayBtn.addEventListener('click', () => {
