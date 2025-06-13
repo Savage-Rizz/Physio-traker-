@@ -38,8 +38,10 @@
             min-height: 100vh; 
         }
         
+        /* The initial-screen and start-button styles are no longer needed
+           since the app opens directly, but kept here if you want to reuse them */
         .initial-screen {
-            display: flex;
+            display: none; /* Hide by default */
             flex-direction: column;
             justify-content: center;
             align-items: center;
@@ -69,6 +71,7 @@
             cursor: pointer;
             transition: background-color 0.3s ease, transform 0.2s ease;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            display: none; /* Hide by default */
         }
 
         .start-button:hover {
@@ -85,7 +88,7 @@
             overflow: hidden;
             min-height: 100vh; 
             width: 100%; 
-            display: none; 
+            display: block; /* Changed to block to display directly */
         }
         
         header {
@@ -715,10 +718,10 @@
     </style>
 </head>
 <body>
-    <div class="initial-screen" id="initialScreen">
+    <div class="initial-screen" id="initialScreen" style="display: none;">
         <h2>Physiotherapy Patient Tracker</h2>
         <p>Organize and track patient treatments daily.</p>
-        <button class="start-button" id="startButton">Start Application</button>
+        <button class="start-button" id="startButton" style="display: none;">Start Application</button>
     </div>
 
     <div class="container" id="mainContainer">
@@ -800,6 +803,7 @@
 
     <script>
         // --- Firebase Configuration ---
+        // !!! IMPORTANT: Replace with your actual Firebase project configuration !!!
         const firebaseConfig = {
             apiKey: "AIzaSyDAUsHLgTYmj3a-euySuWAk93C99asdEF4",
             authDomain: "physio-traker.firebaseapp.com",
@@ -829,8 +833,9 @@
         const departmentsContainer = document.getElementById('departmentsContainer');
         const noDepartmentsMessage = document.getElementById('noDepartmentsMessage');
 
-        const initialScreen = document.getElementById('initialScreen');
-        const startButton = document.getElementById('startButton');
+        // Initial screen elements are now hidden, no longer referenced for display logic
+        // const initialScreen = document.getElementById('initialScreen');
+        // const startButton = document.getElementById('startButton');
         const mainContainer = document.getElementById('mainContainer');
         const copyPreviousDayBtn = document.getElementById('copyPreviousDayBtn');
         
@@ -906,6 +911,9 @@
         // Function to fetch data for the current date from Firebase
         function fetchDailyRecords() {
             const dateKey = formatDateForData(currentDate);
+            // Detach previous listener to avoid multiple listeners on date change
+            // This is important to ensure only one listener is active for the current day
+            dailyRecordsRef.off('value'); 
             dailyRecordsRef.child(dateKey).on('value', (snapshot) => {
                 const data = snapshot.val();
                 allData.dailyRecords[dateKey] = data || { departments: [], bedStatuses: {} };
@@ -932,7 +940,6 @@
             const todayDataKey = formatDateForData(currentDate);
 
             // Ensure the daily record for the current date is available in `allData`
-            // This is crucial because `fetchDailyRecords` populates `allData.dailyRecords[dateKey]` asynchronously.
             const currentDayRecord = allData.dailyRecords[todayDataKey];
             
             if (!currentDayRecord || currentDayRecord.departments.length === 0) {
@@ -1022,7 +1029,7 @@
                             const todayDataKey = formatDateForData(currentDate);
                             
                             // Get a mutable copy of the current day's data
-                            let currentDayRecord = JSON.parse(JSON.stringify(allData.dailyRecords[todayDataKey]));
+                            let currentDayRecord = JSON.parse(JSON.stringify(allData.dailyRecords[todayDataKey] || { departments: [], bedStatuses: {} }));
                             
                             // Remove department from the current day's list
                             currentDayRecord.departments = currentDayRecord.departments.filter(d => d.id !== deptId);
@@ -1228,7 +1235,7 @@
                 dailyRecordsRef.child(prevDayDataKey).once('value', (snapshot) => {
                     const prevDayRecord = snapshot.val();
 
-                    if (!prevDayRecord || (prevDayRecord.departments.length === 0 && Object.keys(prevDayRecord.bedStatuses).length === 0)) {
+                    if (!prevDayRecord || ((prevDayRecord.departments || []).length === 0 && Object.keys(prevDayRecord.bedStatuses || {}).length === 0)) {
                         alert("No data found for the previous day to copy.");
                         return;
                     }
@@ -1286,10 +1293,8 @@
         
         // --- Initialization ---
         
-        // Event listener for the start button
-        startButton.addEventListener('click', () => {
-            initialScreen.style.display = 'none'; 
-            mainContainer.style.display = 'block'; 
+        // Directly initialize the application on page load
+        document.addEventListener('DOMContentLoaded', () => {
             updateDateDisplay(); 
             fetchDailyRecords(); // Fetch initial data for today
         });
