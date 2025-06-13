@@ -795,24 +795,40 @@
         </div>
     </div>
     
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-database-compat.js"></script>
+
     <script>
+        // --- Firebase Configuration ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyDAUsHLgTYmj3a-euySuWAk93C99asdEF4",
+            authDomain: "physio-traker.firebaseapp.com",
+            databaseURL: "https://physio-traker-default-rtdb.firebaseio.com",
+            projectId: "physio-traker",
+            storageBucket: "physio-traker.firebasestorage.app",
+            messagingSenderId: "966541115025",
+            appId: "1:966541115025:web:4ad7b04be7f58c2efcc930",
+            measurementId: "G-TRH5CKN25N"
+        };
+
+        // Initialize Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+        const dailyRecordsRef = database.ref('dailyRecords'); // Main reference for daily data
+
         // --- Global Variables ---
         let currentDate = new Date(); // Initialize with the current date
         const ADMIN_PASSWORD = "54321"; // Define the password
         
-        // Structure to store all data: departments and their beds, plus daily history
-        // departments and bed statuses are now stored PER DAY
-        let allData = JSON.parse(localStorage.getItem('physioTrackingData')) || {
-            dailyRecords: {} // Key: "YYYY-MM-DD", Value: { departments: [], bedStatuses: {} }
+        let allData = {
+            dailyRecords: {} // Will be populated by Firebase
         };
-        let editingDepartmentId = null; // To track which department is being edited
-        let selectedBed = null; // To store information about the currently selected bed for the bed modal
+        let editingDepartmentId = null; 
+        let selectedBed = null; 
         
         const departmentsContainer = document.getElementById('departmentsContainer');
         const noDepartmentsMessage = document.getElementById('noDepartmentsMessage');
-        // const historyList = document.getElementById('historyList'); // Removed reference
 
-        // New elements for start screen
         const initialScreen = document.getElementById('initialScreen');
         const startButton = document.getElementById('startButton');
         const mainContainer = document.getElementById('mainContainer');
@@ -834,21 +850,6 @@
             return `${year}-${month}-${day}`;
         }
         
-        // Ensure daily record structure exists for the current date
-        function ensureDailyRecordExists(dateKey) {
-            if (!allData.dailyRecords[dateKey]) {
-                allData.dailyRecords[dateKey] = {
-                    departments: [],
-                    bedStatuses: {}
-                };
-            }
-        }
-
-        // Save all data to localStorage
-        function saveData() {
-            localStorage.setItem('physioTrackingData', JSON.stringify(allData));
-        }
-        
         // Generate a unique ID (simple for this example)
         function generateUniqueId() {
             return '_' + Math.random().toString(36).substr(2, 9);
@@ -858,17 +859,19 @@
         
         function updateDateDisplay() {
             document.getElementById('currentDate').textContent = formatDate(currentDate);
-            renderDepartments(); // Re-render departments for the new date
+            // Data will be fetched and rendered by the Firebase listener
         }
         
         document.getElementById('prevDayBtn').addEventListener('click', () => {
             currentDate.setDate(currentDate.getDate() - 1);
             updateDateDisplay();
+            fetchDailyRecords(); // Fetch data for the new date
         });
         
         document.getElementById('nextDayBtn').addEventListener('click', () => {
             currentDate.setDate(currentDate.getDate() + 1);
             updateDateDisplay();
+            fetchDailyRecords(); // Fetch data for the new date
         });
         
         // --- Modal Handling ---
@@ -892,31 +895,55 @@
         
         window.addEventListener('click', (e) => {
             modals.forEach(modal => {
-                // Check if the clicked modal is *not* the history modal (which is now removed from HTML)
-                // This prevents issues if a modal with this ID is somehow still in the DOM or logic.
-                // For safety, we can explicitly check if the modal exists in the current DOM before trying to close.
-                if (e.target === modal && modal.id !== 'historyModal') { 
+                if (e.target === modal) { 
                     closeModal(modal.id);
                 }
             });
         });
         
+        // --- Firebase Data Operations ---
+        
+        // Function to fetch data for the current date from Firebase
+        function fetchDailyRecords() {
+            const dateKey = formatDateForData(currentDate);
+            dailyRecordsRef.child(dateKey).on('value', (snapshot) => {
+                const data = snapshot.val();
+                allData.dailyRecords[dateKey] = data || { departments: [], bedStatuses: {} };
+                renderDepartments(); // Render departments when data is received
+            });
+        }
+
+        // Function to save the entire daily record for the current date to Firebase
+        function saveDailyRecord(dataToSave) {
+            const dateKey = formatDateForData(currentDate);
+            dailyRecordsRef.child(dateKey).set(dataToSave)
+                .then(() => {
+                    console.log("Daily record saved to Firebase successfully.");
+                })
+                .catch((error) => {
+                    console.error("Error saving daily record to Firebase: ", error);
+                });
+        }
+
         // --- Department Management ---
         
         function renderDepartments() {
-            departmentsContainer.innerHTML = ''; // Clear existing departments
+            departmentsContainer.innerHTML = ''; 
             const todayDataKey = formatDateForData(currentDate);
-            ensureDailyRecordExists(todayDataKey); // Ensure structure for current date
 
-            const currentDayDepartments = allData.dailyRecords[todayDataKey].departments;
-            const currentDayBedStatuses = allData.dailyRecords[todayDataKey].bedStatuses;
+            // Ensure the daily record for the current date is available in `allData`
+            // This is crucial because `fetchDailyRecords` populates `allData.dailyRecords[dateKey]` asynchronously.
+            const currentDayRecord = allData.dailyRecords[todayDataKey];
             
-            if (currentDayDepartments.length === 0) {
+            if (!currentDayRecord || currentDayRecord.departments.length === 0) {
                 noDepartmentsMessage.style.display = 'block';
                 return;
             } else {
                 noDepartmentsMessage.style.display = 'none';
             }
+            
+            const currentDayDepartments = currentDayRecord.departments || [];
+            const currentDayBedStatuses = currentDayRecord.bedStatuses || {};
             
             currentDayDepartments.forEach(department => {
                 const departmentDiv = document.createElement('div');
@@ -924,7 +951,6 @@
                 departmentDiv.dataset.id = department.id;
                 
                 let bedsHtml = '';
-                // Get bed statuses specific to this department for the current day
                 const departmentBedStatuses = currentDayBedStatuses[department.id] || {};
                 
                 department.beds.forEach(bedNumber => {
@@ -995,16 +1021,18 @@
                         if (confirm('Are you sure you want to delete this department and its bed data for this day?')) {
                             const todayDataKey = formatDateForData(currentDate);
                             
+                            // Get a mutable copy of the current day's data
+                            let currentDayRecord = JSON.parse(JSON.stringify(allData.dailyRecords[todayDataKey]));
+                            
                             // Remove department from the current day's list
-                            allData.dailyRecords[todayDataKey].departments = allData.dailyRecords[todayDataKey].departments.filter(d => d.id !== deptId);
+                            currentDayRecord.departments = currentDayRecord.departments.filter(d => d.id !== deptId);
                             
                             // Remove bed statuses for this department for the current day
-                            if (allData.dailyRecords[todayDataKey].bedStatuses[deptId]) {
-                                delete allData.dailyRecords[todayDataKey].bedStatuses[deptId];
+                            if (currentDayRecord.bedStatuses[deptId]) {
+                                delete currentDayRecord.bedStatuses[deptId];
                             }
                             
-                            saveData();
-                            renderDepartments();
+                            saveDailyRecord(currentDayRecord); // Save updated record to Firebase
                             alert('Department deleted successfully.');
                         }
                     } else {
@@ -1043,8 +1071,9 @@
             }
 
             const todayDataKey = formatDateForData(currentDate);
-            ensureDailyRecordExists(todayDataKey);
-            let currentDayDepartments = allData.dailyRecords[todayDataKey].departments;
+            // Get a mutable copy of the current day's data or initialize if it doesn't exist
+            let currentDayRecord = JSON.parse(JSON.stringify(allData.dailyRecords[todayDataKey] || { departments: [], bedStatuses: {} }));
+            let currentDayDepartments = currentDayRecord.departments;
             
             if (editingDepartmentId) {
                 // Edit existing department for the current day
@@ -1052,7 +1081,6 @@
                 if (departmentIndex !== -1) {
                     currentDayDepartments[departmentIndex].name = deptName;
                     currentDayDepartments[departmentIndex].beds = bedNumbers;
-                    // No need to clear bed statuses, if a bed number is removed it just won't be displayed
                 }
             } else {
                 // Add new department for the current day
@@ -1060,13 +1088,12 @@
                     id: generateUniqueId(),
                     name: deptName,
                     beds: bedNumbers,
-                    icon: 'fas fa-hospital-user' // Default icon, could be made dynamic
+                    icon: 'fas fa-hospital-user' 
                 };
                 currentDayDepartments.push(newDepartment);
             }
             
-            saveData();
-            renderDepartments();
+            saveDailyRecord(currentDayRecord); // Save updated record to Firebase
             closeModal('departmentModal');
         });
         
@@ -1083,23 +1110,22 @@
                         const departmentId = this.dataset.departmentId;
                         const bedNumber = this.dataset.bedNumber;
                         const todayDataKey = formatDateForData(currentDate);
-                        ensureDailyRecordExists(todayDataKey);
                         
-                        const currentDayDepartments = allData.dailyRecords[todayDataKey].departments;
-                        const department = currentDayDepartments.find(d => d.id === departmentId);
+                        const currentDayRecord = allData.dailyRecords[todayDataKey];
+                        const department = currentDayRecord?.departments.find(d => d.id === departmentId);
                         
                         if (department) {
                             selectedBed = { departmentId, bedNumber: parseInt(bedNumber) };
                             document.getElementById('modalHeader').textContent = `Bed #${bedNumber} - ${department.name}`;
                             
-                            const bedRecord = allData.dailyRecords[todayDataKey].bedStatuses?.[departmentId]?.[bedNumber];
+                            const bedRecord = currentDayRecord.bedStatuses?.[departmentId]?.[bedNumber];
                             
                             // Set status
                             document.querySelectorAll('.status-option').forEach(option => {
                                 option.classList.remove('selected');
                                 if (bedRecord && option.dataset.status === bedRecord.status) {
                                     option.classList.add('selected');
-                                } else if (!bedRecord && option.dataset.status === 'pending') { // Default to pending if no record
+                                } else if (!bedRecord && option.dataset.status === 'pending') { 
                                      option.classList.add('selected');
                                 }
                             });
@@ -1115,10 +1141,10 @@
                     bedElement.addEventListener('click', function() {
                         const departmentId = this.dataset.departmentId;
                         const todayDataKey = formatDateForData(currentDate);
-                        ensureDailyRecordExists(todayDataKey);
                         
-                        const currentDayDepartments = allData.dailyRecords[todayDataKey].departments;
-                        const department = currentDayDepartments.find(d => d.id === departmentId);
+                        // Get a mutable copy of the current day's data
+                        let currentDayRecord = JSON.parse(JSON.stringify(allData.dailyRecords[todayDataKey] || { departments: [], bedStatuses: {} }));
+                        const department = currentDayRecord.departments.find(d => d.id === departmentId);
                         
                         if (department) {
                             let newBedNumber;
@@ -1133,8 +1159,7 @@
                                 if (!isNaN(bedNum) && bedNum > 0 && !department.beds.includes(bedNum)) {
                                     department.beds.push(bedNum);
                                     department.beds.sort((a,b) => a-b); // Keep beds sorted
-                                    saveData();
-                                    renderDepartments();
+                                    saveDailyRecord(currentDayRecord); // Save updated record to Firebase
                                     isValidInput = true;
                                 } else if (isNaN(bedNum) || bedNum <= 0) {
                                     alert('Invalid input. Please enter a positive number.');
@@ -1163,22 +1188,23 @@
             const selectedStatus = document.querySelector('.status-option.selected')?.dataset.status || 'pending';
             const notes = document.getElementById('bedNotes').value.trim();
             const todayDataKey = formatDateForData(currentDate);
-            ensureDailyRecordExists(todayDataKey);
+            
+            // Get a mutable copy of the current day's data
+            let currentDayRecord = JSON.parse(JSON.stringify(allData.dailyRecords[todayDataKey] || { departments: [], bedStatuses: {} }));
             
             // Ensure bedStatuses for the department exists
-            if (!allData.dailyRecords[todayDataKey].bedStatuses[selectedBed.departmentId]) {
-                allData.dailyRecords[todayDataKey].bedStatuses[selectedBed.departmentId] = {};
+            if (!currentDayRecord.bedStatuses[selectedBed.departmentId]) {
+                currentDayRecord.bedStatuses[selectedBed.departmentId] = {};
             }
             
-            allData.dailyRecords[todayDataKey].bedStatuses[selectedBed.departmentId][selectedBed.bedNumber] = {
+            currentDayRecord.bedStatuses[selectedBed.departmentId][selectedBed.bedNumber] = {
                 status: selectedStatus,
                 notes: notes
             };
             
-            saveData();
-            renderDepartments(); // Re-render to update bed status
+            saveDailyRecord(currentDayRecord); // Save updated record to Firebase
             closeModal('bedModal');
-            selectedBed = null; // Clear selected bed
+            selectedBed = null; 
         });
         
         document.getElementById('cancelBedBtn').addEventListener('click', () => {
@@ -1186,83 +1212,72 @@
             selectedBed = null;
         });
         
-        // --- History View ---
-        // All history-related functions and event listeners are now removed.
-        // document.getElementById('viewHistoryBtn').addEventListener('click', () => {
-        //     renderHistory();
-        //     openModal('historyModal');
-        // });
-        // document.getElementById('closeHistoryBtn').addEventListener('click', () => {
-        //     closeModal('historyModal');
-        // });
-        // function renderHistory() { /* ... removed ... */ }
-
         // --- Copy Previous Day Functionality ---
         copyPreviousDayBtn.addEventListener('click', () => {
             // --- PASSWORD CHECK FOR COPYING ---
             const password = prompt('Enter password to copy previous day\'s data:');
             if (password === ADMIN_PASSWORD) {
-                const currentDayDate = new Date(currentDate); // Clone current date
+                const currentDayDate = new Date(currentDate); 
                 const prevDayDate = new Date(currentDate);
                 prevDayDate.setDate(prevDayDate.getDate() - 1);
                 
                 const currentDayDataKey = formatDateForData(currentDayDate);
                 const prevDayDataKey = formatDateForData(prevDayDate);
 
-                // Ensure current day's record exists
-                ensureDailyRecordExists(currentDayDataKey);
+                // Fetch previous day's data from Firebase to perform the copy operation
+                dailyRecordsRef.child(prevDayDataKey).once('value', (snapshot) => {
+                    const prevDayRecord = snapshot.val();
 
-                const prevDayRecord = allData.dailyRecords[prevDayDataKey];
+                    if (!prevDayRecord || (prevDayRecord.departments.length === 0 && Object.keys(prevDayRecord.bedStatuses).length === 0)) {
+                        alert("No data found for the previous day to copy.");
+                        return;
+                    }
 
-                if (!prevDayRecord || (prevDayRecord.departments.length === 0 && Object.keys(prevDayRecord.bedStatuses).length === 0)) {
-                    alert("No data found for the previous day to copy.");
-                    return;
-                }
+                    if (confirm("Are you sure you want to copy the previous day's data? All copied beds will be set to 'Pending' status. 'D.C / TRF' beds will not be copied.")) {
+                        
+                        const newDepartmentsForCurrentDay = [];
+                        const newBedStatusesForCurrentDay = {};
 
-                if (confirm("Are you sure you want to copy the previous day's data? All copied beds will be set to 'Pending' status. 'D.C / TRF' beds will not be copied.")) {
-                    
-                    const newDepartmentsForCurrentDay = [];
-                    const newBedStatusesForCurrentDay = {};
+                        // Iterate through previous day's departments
+                        (prevDayRecord.departments || []).forEach(prevDept => {
+                            const copiedDept = JSON.parse(JSON.stringify(prevDept)); 
+                            copiedDept.beds = []; 
 
-                    // Iterate through previous day's departments
-                    prevDayRecord.departments.forEach(prevDept => {
-                        const copiedDept = JSON.parse(JSON.stringify(prevDept)); // Deep copy department structure
-                        copiedDept.beds = []; // Reset beds for this department to only include active ones
+                            newBedStatusesForCurrentDay[copiedDept.id] = {}; 
 
-                        newBedStatusesForCurrentDay[copiedDept.id] = {}; // Initialize bed statuses for this copied department
+                            const prevDeptBedStatuses = prevDayRecord.bedStatuses[prevDept.id] || {};
 
-                        const prevDeptBedStatuses = prevDayRecord.bedStatuses[prevDept.id] || {};
+                            // Iterate through beds of the previous department
+                            (prevDept.beds || []).forEach(bedNumber => {
+                                const prevBedData = prevDeptBedStatuses[bedNumber];
 
-                        // Iterate through beds of the previous department
-                        prevDept.beds.forEach(bedNumber => {
-                            const prevBedData = prevDeptBedStatuses[bedNumber];
+                                // Only copy if the previous status is NOT 'dc-trf'
+                                if (prevBedData?.status !== 'dc-trf') {
+                                    copiedDept.beds.push(bedNumber); 
+                                    
+                                    newBedStatusesForCurrentDay[copiedDept.id][bedNumber] = {
+                                        status: 'pending', 
+                                        notes: prevBedData?.notes || '' 
+                                    };
+                                }
+                            });
 
-                            // Only copy if the previous status is NOT 'dc-trf'
-                            if (prevBedData?.status !== 'dc-trf') {
-                                copiedDept.beds.push(bedNumber); // Add bed number to the new department
-                                
-                                // Copy notes and set status to 'pending' for the current day
-                                newBedStatusesForCurrentDay[copiedDept.id][bedNumber] = {
-                                    status: 'pending', // Always set to pending for the new day
-                                    notes: prevBedData?.notes || '' // Copy notes
-                                };
+                            // Only add department if it has beds that were not 'dc-trf'
+                            if (copiedDept.beds.length > 0) {
+                                newDepartmentsForCurrentDay.push(copiedDept);
                             }
                         });
 
-                        // Only add department if it has beds that were not 'dc-trf'
-                        if (copiedDept.beds.length > 0) {
-                            newDepartmentsForCurrentDay.push(copiedDept);
-                        }
-                    });
+                        // Create the new daily record for the current day
+                        const updatedCurrentDayRecord = {
+                            departments: newDepartmentsForCurrentDay,
+                            bedStatuses: newBedStatusesForCurrentDay
+                        };
 
-                    // Overwrite current day's data with the filtered and reset data
-                    allData.dailyRecords[currentDayDataKey].departments = newDepartmentsForCurrentDay;
-                    allData.dailyRecords[currentDayDataKey].bedStatuses = newBedStatusesForCurrentDay;
-
-                    saveData();
-                    renderDepartments(); // Re-render with the updated data
-                    alert("Previous day's data copied successfully! (D.C / TRF patients were not copied, and other beds are now 'Pending').");
-                }
+                        saveDailyRecord(updatedCurrentDayRecord); 
+                        alert("Previous day's data copied successfully! (D.C / TRF patients were not copied, and other beds are now 'Pending').");
+                    }
+                });
             } else {
                 alert('Incorrect password. Data not copied.');
             }
@@ -1273,9 +1288,10 @@
         
         // Event listener for the start button
         startButton.addEventListener('click', () => {
-            initialScreen.style.display = 'none'; // Hide the initial screen
-            mainContainer.style.display = 'block'; // Show the main application container
-            updateDateDisplay(); // Now display the date and content
+            initialScreen.style.display = 'none'; 
+            mainContainer.style.display = 'block'; 
+            updateDateDisplay(); 
+            fetchDailyRecords(); // Fetch initial data for today
         });
 
     </script>
